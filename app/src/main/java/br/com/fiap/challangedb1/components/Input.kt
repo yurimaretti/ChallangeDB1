@@ -22,13 +22,13 @@ fun InputBox(
     updateValue: (String) -> Unit,
     visualTransformation: VisualTransformation
 ) {
-    Text(text = label)
+    Text(text = label, modifier = Modifier.padding(start = 8.dp))
     OutlinedTextField(
         value = value,
         onValueChange = updateValue,
         modifier = modifier
             .fillMaxWidth()
-            .padding(top = 16.dp),
+            .padding(top = 12.dp),
         placeholder = {
             Text(text = placeholder)
         },
