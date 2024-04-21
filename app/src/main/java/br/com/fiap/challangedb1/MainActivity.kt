@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import br.com.fiap.challangedb1.screens.CadastroAprendizScreen
+import br.com.fiap.challangedb1.screens.CadastroScreen
 import br.com.fiap.challangedb1.screens.LoginScreen
 import br.com.fiap.challangedb1.ui.theme.ChallangeDB1Theme
 
@@ -44,7 +44,7 @@ class MainActivity : ComponentActivity() {
                         }
                     ){
                         composable(route = "login") { LoginScreen(navController) }
-                        composable(route = "cadastroAprendiz") { CadastroAprendizScreen(navController) }
+                        composable(route = "cadastro") { CadastroScreen(navController) }
                     }
                 }
             }

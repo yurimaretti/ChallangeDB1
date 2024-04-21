@@ -21,7 +21,8 @@ fun Botao(
     onClick: () -> Unit,
     texto: String,
     cor: ButtonColors,
-    modifier: Modifier
+    modifier: Modifier,
+    enabled: Boolean
 ) {
     Button(
         onClick = onClick,
@@ -29,7 +30,8 @@ fun Botao(
             .height(56.dp)
             .padding(4.dp),
         shape = RoundedCornerShape(16.dp),
-        colors = cor
+        colors = cor,
+        enabled = enabled
     ) {
         Text(
             text = texto,

@@ -84,7 +84,8 @@ fun LoginScreen(navController: NavController) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 24.dp),
-                cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.black))
+                cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.black)),
+                enabled = true
             )
             Spacer(modifier = Modifier.height(48.dp))
             Divider(
@@ -100,15 +101,10 @@ fun LoginScreen(navController: NavController) {
             )
             Spacer(modifier = Modifier.height(16.dp))
             BotaoOutline(
-                onClick = { navController.navigate("cadastroAprendiz") },
-                texto = "Cadastro Aprendiz",
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            BotaoOutline(
-                onClick = { /*TODO*/ },
-                texto = "Cadastro Mentor",
-                modifier = Modifier.fillMaxWidth()
+                onClick = { navController.navigate("cadastro") },
+                texto = "Cadastre-se",
+                modifier = Modifier.fillMaxWidth(),
+                enabled = true
             )
             Spacer(modifier = Modifier.height(16.dp))
         }

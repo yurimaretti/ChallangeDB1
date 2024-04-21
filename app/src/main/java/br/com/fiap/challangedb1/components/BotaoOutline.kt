@@ -16,7 +16,8 @@ import androidx.compose.ui.unit.sp
 fun BotaoOutline(
     onClick: () -> Unit,
     texto: String,
-    modifier: Modifier
+    modifier: Modifier,
+    enabled: Boolean
 ) {
     OutlinedButton(
         onClick = onClick,
@@ -24,6 +25,7 @@ fun BotaoOutline(
             .height(56.dp)
             .padding(4.dp),
         shape = RoundedCornerShape(16.dp),
+        enabled = enabled
     ) {
         Text(
             text = texto,
