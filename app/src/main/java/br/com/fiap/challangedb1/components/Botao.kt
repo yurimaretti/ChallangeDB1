@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,6 +20,7 @@ import br.com.fiap.challangedb1.R
 fun Botao(
     onClick: () -> Unit,
     texto: String,
+    cor: ButtonColors,
     modifier: Modifier
 ) {
     Button(
@@ -27,7 +29,7 @@ fun Botao(
             .height(56.dp)
             .padding(4.dp),
         shape = RoundedCornerShape(16.dp),
-        colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.black))
+        colors = cor
     ) {
         Text(
             text = texto,

@@ -9,5 +9,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="verde_fundo">#FF15E7D4</color>
     <color name="preto_fundo">#FF1D1B20</color>
+    <color name="danger">#AE1919</color>
     <color name="cor_card">#F6F6F6</color>
 </resources>

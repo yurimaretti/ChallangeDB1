@@ -66,4 +66,15 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    // Dependências de Navegação
+
+    implementation("androidx.navigation:navigation-compose:2.7.7")
+    implementation("com.google.accompanist:accompanist-navigation-animation:0.30.1")
+
+    // Dependências do Retrofit
+
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.9.0")
 }
