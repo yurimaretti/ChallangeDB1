@@ -30,8 +30,10 @@ import androidx.navigation.compose.rememberNavController
 import br.com.fiap.challangedb1.R
 import br.com.fiap.challangedb1.components.Botao
 import br.com.fiap.challangedb1.components.BotaoOutline
+import br.com.fiap.challangedb1.components.BotoesAprendizMentor
 import br.com.fiap.challangedb1.components.CardTemplate
 import br.com.fiap.challangedb1.components.InputBox
+import br.com.fiap.challangedb1.components.SeletorAprdzMentor
 import br.com.fiap.challangedb1.components.TemplateScreen
 
 @Composable
@@ -41,6 +43,9 @@ fun LoginScreen(navController: NavController) {
         mutableStateOf("")
     }
     var senha by remember {
+        mutableStateOf("")
+    }
+    var tipoCadastro by remember {
         mutableStateOf("")
     }
 
@@ -77,15 +82,22 @@ fun LoginScreen(navController: NavController) {
                     visualTransformation = PasswordVisualTransformation()
                 )
             }
-            Spacer(modifier = Modifier.height(48.dp))
-            Botao(
-                onClick = { /*TODO*/ },
-                texto = "Login",
+            Spacer(modifier = Modifier.height(16.dp))
+            SeletorAprdzMentor(
+                tipoCadastro = tipoCadastro,
+                onClickAprendiz = { tipoCadastro = "Aprendiz" },
+                onClickMentor = { tipoCadastro = "Mentor" }
+            )
+            Spacer(modifier = Modifier.height(36.dp))
+            BotoesAprendizMentor(
+                tipoCadastro = tipoCadastro,
+                onClickAprendiz = { /*TODO*/ },
+                txtBotaoAprendiz = "Login Aprendiz",
+                onClickMentor = { /*TODO*/ },
+                txtBotaoMentor = "Login Mentor",
+                txtDisabled = "Login",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 24.dp),
-                cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.black)),
-                enabled = true
             )
             Spacer(modifier = Modifier.height(48.dp))
             Divider(

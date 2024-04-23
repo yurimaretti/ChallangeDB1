@@ -40,8 +40,10 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import br.com.fiap.challangedb1.R
 import br.com.fiap.challangedb1.components.Botao
+import br.com.fiap.challangedb1.components.BotoesAprendizMentor
 import br.com.fiap.challangedb1.components.CardTemplate
 import br.com.fiap.challangedb1.components.InputBox
+import br.com.fiap.challangedb1.components.SeletorAprdzMentor
 import br.com.fiap.challangedb1.components.TemplateScreen
 import br.com.fiap.challangedb1.enums.Generos
 
@@ -177,36 +179,11 @@ fun CadastroScreen(navController: NavController) {
                     modifier = Modifier.padding(start = 8.dp)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                Row(modifier = Modifier
-                    .fillMaxWidth()
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        RadioButton(
-                            selected = tipoCadastro == "Aprendiz",
-                            onClick = { tipoCadastro = "Aprendiz" },
-                            colors = RadioButtonDefaults.colors(
-                                selectedColor = colorResource(id = R.color.verde_fundo),
-                                unselectedColor = Color.Gray
-                            )
-                        )
-                        Text(text = "Aprendiz", color = colorResource(id = R.color.preto_fundo), fontWeight = FontWeight.ExtraBold)
-                    }
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        RadioButton(
-                            selected = tipoCadastro == "Mentor",
-                            onClick = { tipoCadastro = "Mentor" },
-                            colors = RadioButtonDefaults.colors(
-                                selectedColor = colorResource(id = R.color.verde_fundo),
-                                unselectedColor = Color.Gray
-                            )
-                        )
-                        Text(text = "Mentor", color = colorResource(id = R.color.preto_fundo), fontWeight = FontWeight.ExtraBold)
-                    }
-                }
+                SeletorAprdzMentor(
+                    tipoCadastro = tipoCadastro,
+                    onClickAprendiz = { tipoCadastro = "Aprendiz" },
+                    onClickMentor = { tipoCadastro = "Mentor" }
+                )
             }
             Spacer(modifier = Modifier.height(48.dp))
             Row(
@@ -223,41 +200,22 @@ fun CadastroScreen(navController: NavController) {
                     cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.danger)),
                     enabled = true
                 )
-                if (tipoCadastro == "Aprendiz") {
-                    Botao(
-                        onClick = { navController.navigate("login") },
-                        texto = "Cadastrar Aprendiz",
-                        modifier = Modifier
-                            .padding(horizontal = 24.dp)
-                            .width(120.dp)
-                            .height(70.dp),
-                        cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.black)),
-                        enabled = true
-                    )
-                } else if (tipoCadastro == "Mentor") {
-                    Botao(
-                        onClick = { navController.navigate("login") },
-                        texto = "Cadastrar Mentor",
-                        modifier = Modifier
-                            .padding(horizontal = 24.dp)
-                            .width(120.dp)
-                            .height(70.dp),
-                        cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.black)),
-                        enabled = true
-                    )
-                } else {
-                    Botao(
-                        onClick = {  },
-                        texto = "Cadastrar",
-                        cor = ButtonDefaults.buttonColors(Color.Gray),
-                        modifier = Modifier
-                            .padding(horizontal = 24.dp)
-                            .width(120.dp)
-                            .height(70.dp),
-                        enabled = false
-                    )
-                }
-
+                BotoesAprendizMentor(
+                    tipoCadastro = tipoCadastro,
+                    onClickAprendiz = {
+                        navController.navigate("login")
+                    },
+                    txtBotaoAprendiz = "Cadastrar Aprendiz",
+                    onClickMentor = {
+                        navController.navigate("login")
+                    },
+                    txtBotaoMentor = "Cadastrar Mentor",
+                    txtDisabled = "Cadastrar",
+                    modifier = Modifier
+                        .padding(horizontal = 24.dp)
+                        .width(120.dp)
+                        .height(70.dp)
+                )
             }
             Spacer(modifier = Modifier.height(48.dp))
         }
