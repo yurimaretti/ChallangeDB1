@@ -73,7 +73,6 @@ fun TemplateScreen(nomeTela: String, tela: @Composable () -> Unit) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Column(modifier = Modifier
-                    .padding(16.dp)
                 ) {
                     tela()
                 }

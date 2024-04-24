@@ -25,7 +25,7 @@ fun BotoesAprendizMentor(
             modifier = modifier,
             cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.black)),
             enabled = true
-        )
+        ){}
     } else if (tipoCadastro == "Mentor") {
         Botao(
             onClick = onClickMentor,
@@ -33,7 +33,7 @@ fun BotoesAprendizMentor(
             modifier = modifier,
             cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.black)),
             enabled = true
-        )
+        ){}
     } else {
         Botao(
             onClick = {  },
@@ -41,6 +41,6 @@ fun BotoesAprendizMentor(
             cor = ButtonDefaults.buttonColors(Color.Gray),
             modifier = modifier,
             enabled = false
-        )
+        ){}
     }
 }

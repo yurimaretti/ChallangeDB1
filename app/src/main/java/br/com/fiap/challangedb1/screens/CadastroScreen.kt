@@ -199,7 +199,7 @@ fun CadastroScreen(navController: NavController) {
                         .height(70.dp),
                     cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.danger)),
                     enabled = true
-                )
+                ){}
                 BotoesAprendizMentor(
                     tipoCadastro = tipoCadastro,
                     onClickAprendiz = {
