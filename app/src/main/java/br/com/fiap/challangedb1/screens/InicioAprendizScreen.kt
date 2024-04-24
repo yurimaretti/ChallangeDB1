@@ -54,7 +54,7 @@ fun InicioAprendizScreen(navController: NavController) {
                 .padding(12.dp)
         ) {
             Botao(
-                onClick = { /*TODO*/ },
+                onClick = { navController.navigate("editarPerfilAprendiz") },
                 texto = "Editar Perfil",
                 cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.black)),
                 modifier = Modifier,
