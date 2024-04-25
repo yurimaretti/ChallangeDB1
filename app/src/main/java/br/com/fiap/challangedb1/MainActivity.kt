@@ -18,6 +18,7 @@ import br.com.fiap.challangedb1.screens.EditarPerfilAprdzScreen
 import br.com.fiap.challangedb1.screens.FormacaoAprdzScreen
 import br.com.fiap.challangedb1.screens.InicioAprendizScreen
 import br.com.fiap.challangedb1.screens.LoginScreen
+import br.com.fiap.challangedb1.screens.MatchAprdzScreen
 import br.com.fiap.challangedb1.ui.theme.ChallangeDB1Theme
 
 class MainActivity : ComponentActivity() {
@@ -53,6 +54,7 @@ class MainActivity : ComponentActivity() {
                         composable(route = "editarPerfilAprendiz") { EditarPerfilAprdzScreen(navController) }
                         composable(route = "alterarSenhaAprendiz") { AlterarSenhaAprdzScreen(navController) }
                         composable(route = "formacaoAprendiz") { FormacaoAprdzScreen(navController) }
+                        composable(route = "matchAprendiz") { MatchAprdzScreen(navController) }
                     }
                 }
             }

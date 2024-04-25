@@ -58,7 +58,7 @@ fun InicioAprendizScreen(navController: NavController) {
                 )
             }
             Botao(
-                onClick = { /*TODO*/ },
+                onClick = { navController.navigate("matchAprendiz") },
                 texto = "Matches",
                 cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.purple_700)),
                 modifier = Modifier,
