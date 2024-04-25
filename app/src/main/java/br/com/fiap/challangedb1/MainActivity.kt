@@ -15,6 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import br.com.fiap.challangedb1.screens.AlterarSenhaAprdzScreen
 import br.com.fiap.challangedb1.screens.CadastroScreen
 import br.com.fiap.challangedb1.screens.EditarPerfilAprdzScreen
+import br.com.fiap.challangedb1.screens.FormacaoAprdzScreen
 import br.com.fiap.challangedb1.screens.InicioAprendizScreen
 import br.com.fiap.challangedb1.screens.LoginScreen
 import br.com.fiap.challangedb1.ui.theme.ChallangeDB1Theme
@@ -51,6 +52,7 @@ class MainActivity : ComponentActivity() {
                         composable(route = "inicioAprendiz") { InicioAprendizScreen(navController) }
                         composable(route = "editarPerfilAprendiz") { EditarPerfilAprdzScreen(navController) }
                         composable(route = "alterarSenhaAprendiz") { AlterarSenhaAprdzScreen(navController) }
+                        composable(route = "formacaoAprendiz") { FormacaoAprdzScreen(navController) }
                     }
                 }
             }

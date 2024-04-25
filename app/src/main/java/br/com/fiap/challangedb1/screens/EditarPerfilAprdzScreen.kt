@@ -35,7 +35,6 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -66,13 +65,6 @@ fun EditarPerfilAprdzScreen(navController: NavController) {
             mutableStateOf(false)
         }
         var lista = Generos.values()
-        var senha1 by remember {
-            mutableStateOf("")
-        }
-        var senha2 by remember {
-            mutableStateOf("")
-        }
-
         var direito by remember {
             mutableStateOf(false)
         }
@@ -210,7 +202,7 @@ fun EditarPerfilAprdzScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(16.dp))
             Botao(
-                onClick = { /*TODO*/ },
+                onClick = { navController.navigate("formacaoAprendiz") },
                 texto = "Incluir Formação",
                 cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.black)),
                 modifier = Modifier.fillMaxWidth(),

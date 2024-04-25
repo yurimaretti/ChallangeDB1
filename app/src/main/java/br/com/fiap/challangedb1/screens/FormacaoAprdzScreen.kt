@@ -27,7 +27,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,44 +36,33 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import br.com.fiap.challangedb1.R
 import br.com.fiap.challangedb1.components.Botao
-import br.com.fiap.challangedb1.components.BotoesAprendizMentor
 import br.com.fiap.challangedb1.components.CardTemplate
 import br.com.fiap.challangedb1.components.InputBox
-import br.com.fiap.challangedb1.components.SeletorAprdzMentor
 import br.com.fiap.challangedb1.components.TemplateScreen
-import br.com.fiap.challangedb1.enums.Generos
+import br.com.fiap.challangedb1.enums.GrauInstrucao
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CadastroScreen(navController: NavController) {
+fun FormacaoAprdzScreen(navController: NavController) {
 
-    TemplateScreen(nomeTela = "Cadastre-se") {
+    TemplateScreen(nomeTela = "Formação") {
 
-        var nome by remember {
+        var curso by remember {
             mutableStateOf("")
         }
-        var email by remember {
+        var instituicao by remember {
             mutableStateOf("")
         }
-        var genero by remember {
+        var grau by remember {
             mutableStateOf("")
         }
         var isExpanded by remember {
             mutableStateOf(false)
         }
-        var lista = Generos.values()
-        var senha1 by remember {
-            mutableStateOf("")
-        }
-        var senha2 by remember {
-            mutableStateOf("")
-        }
-        var tipoCadastro by remember {
-            mutableStateOf("")
-        }
+        var lista = GrauInstrucao.values()
 
         CardTemplate {
-            Text(text = "Cadastro",
+            Text(text = "Incluir Formação",
                 modifier = Modifier
                     .fillMaxWidth(),
                 textAlign = TextAlign.Center,
@@ -83,30 +71,8 @@ fun CadastroScreen(navController: NavController) {
             )
             Spacer(modifier = Modifier.height(16.dp))
             Column(modifier = Modifier.padding(horizontal = 12.dp)) {
-                InputBox(
-                    label = "Nome",
-                    placeholder = "Informe seu nome",
-                    value = nome,
-                    kayboardType = KeyboardType.Text,
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    updateValue = { nome = it },
-                    visualTransformation = VisualTransformation.None
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                InputBox(
-                    label = "E-mail",
-                    placeholder = "Informe seu e-mail",
-                    value = email,
-                    kayboardType = KeyboardType.Email,
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    updateValue = { email = it },
-                    visualTransformation = VisualTransformation.None
-                )
-                Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = "Gênero",
+                    text = "Nível",
                     modifier = Modifier.padding(start = 8.dp)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
@@ -116,7 +82,7 @@ fun CadastroScreen(navController: NavController) {
                     modifier = Modifier.background(Color.White)
                 ) {
                     OutlinedTextField(
-                        value = genero,
+                        value = grau,
                         onValueChange = {},
                         trailingIcon = {
                             ExposedDropdownMenuDefaults
@@ -138,48 +104,36 @@ fun CadastroScreen(navController: NavController) {
                         lista.forEach{
                             DropdownMenuItem(
                                 text = {
-                                    Text(text = it.genero)
+                                    Text(text = it.grau)
                                 },
                                 onClick = {
-                                    genero = it.genero
+                                    grau = it.grau
                                     isExpanded = !isExpanded
                                 }
                             )
                         }
                     }
+
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 InputBox(
-                    label = "Senha",
-                    placeholder = "Informe sua senha",
-                    value = senha1,
-                    kayboardType = KeyboardType.Password,
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    updateValue = { senha1 = it },
-                    visualTransformation = PasswordVisualTransformation()
+                    label = "Curso",
+                    placeholder = "Informe o nome do curso",
+                    value = curso,
+                    kayboardType = KeyboardType.Text,
+                    modifier = Modifier,
+                    updateValue = {},
+                    visualTransformation = VisualTransformation.None
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 InputBox(
-                    label = "Repita a Senha",
-                    placeholder = "Informe novamente sua senha",
-                    value = senha2,
-                    kayboardType = KeyboardType.Password,
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    updateValue = { senha2 = it },
-                    visualTransformation = PasswordVisualTransformation()
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = "Tipo de Cadastro",
-                    modifier = Modifier.padding(start = 8.dp)
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                SeletorAprdzMentor(
-                    tipoCadastro = tipoCadastro,
-                    onClickAprendiz = { tipoCadastro = "Aprendiz" },
-                    onClickMentor = { tipoCadastro = "Mentor" }
+                    label = "Instituição",
+                    placeholder = "Informe o nome da Instituição de Ensino",
+                    value = instituicao,
+                    kayboardType = KeyboardType.Text,
+                    modifier = Modifier,
+                    updateValue = {},
+                    visualTransformation = VisualTransformation.None
                 )
             }
             Spacer(modifier = Modifier.height(48.dp))
@@ -188,7 +142,7 @@ fun CadastroScreen(navController: NavController) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Botao(
-                    onClick = { navController.navigate("login") },
+                    onClick = { navController.navigate("editarPerfilAprendiz") },
                     texto = "Cancelar",
                     modifier = Modifier
                         .padding(horizontal = 24.dp)
@@ -197,22 +151,16 @@ fun CadastroScreen(navController: NavController) {
                     cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.danger)),
                     enabled = true
                 ){}
-                BotoesAprendizMentor(
-                    tipoCadastro = tipoCadastro,
-                    onClickAprendiz = {
-                        navController.navigate("login")
-                    },
-                    txtBotaoAprendiz = "Cadastrar Aprendiz",
-                    onClickMentor = {
-                        navController.navigate("login")
-                    },
-                    txtBotaoMentor = "Cadastrar Mentor",
-                    txtDisabled = "Cadastrar",
+                Botao(
+                    onClick = { navController.navigate("editarPerfilAprendiz") },
+                    texto = "Salvar",
+                    cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.black)),
                     modifier = Modifier
                         .padding(horizontal = 24.dp)
                         .width(120.dp)
-                        .height(70.dp)
-                )
+                        .height(70.dp),
+                    enabled = true
+                ) {}
             }
             Spacer(modifier = Modifier.height(48.dp))
         }
@@ -221,6 +169,6 @@ fun CadastroScreen(navController: NavController) {
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun CadastroAprendizPreview() {
-    CadastroScreen(rememberNavController())
+fun FormacaoAprdzScreenPreview() {
+    FormacaoAprdzScreen(rememberNavController())
 }
