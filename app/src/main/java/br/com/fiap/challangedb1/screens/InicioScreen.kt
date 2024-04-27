@@ -35,8 +35,8 @@ import br.com.fiap.challangedb1.components.CardTemplate
 import br.com.fiap.challangedb1.components.TemplateScreen
 
 @Composable
-fun InicioAprendizScreen(navController: NavController) {
-    TemplateScreen(nomeTela = "Início") {
+fun InicioScreen(navController: NavController, tipoCadastro: String) {
+    TemplateScreen(nomeTela = "Bem vindo $tipoCadastro!") {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
@@ -44,7 +44,7 @@ fun InicioAprendizScreen(navController: NavController) {
                 .padding(12.dp)
         ) {
             Botao(
-                onClick = { navController.navigate("editarPerfilAprendiz") },
+                onClick = { navController.navigate("editarPerfil/$tipoCadastro") },
                 texto = "Editar Perfil",
                 cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.black)),
                 modifier = Modifier,
@@ -58,7 +58,7 @@ fun InicioAprendizScreen(navController: NavController) {
                 )
             }
             Botao(
-                onClick = { navController.navigate("matchAprendiz") },
+                onClick = { navController.navigate("match/$tipoCadastro") },
                 texto = "Matches",
                 cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.purple_700)),
                 modifier = Modifier,
@@ -73,24 +73,49 @@ fun InicioAprendizScreen(navController: NavController) {
             }
         }
         Spacer(modifier = Modifier.height(36.dp))
-        Text(
-            text = "Mentores",
-            modifier = Modifier
-                .fillMaxWidth(),
-            textAlign = TextAlign.Center,
-            fontSize = 36.sp,
-            fontWeight = FontWeight.Bold
-        )
+        if (tipoCadastro == "Aprendiz") {
+            Text(
+                text = "Mentores",
+                modifier = Modifier
+                    .fillMaxWidth(),
+                textAlign = TextAlign.Center,
+                fontSize = 36.sp,
+                fontWeight = FontWeight.Bold
+            )
+        } else if (tipoCadastro == "Mentor") {
+            Text(
+                text = "Aprendizes",
+                modifier = Modifier
+                    .fillMaxWidth(),
+                textAlign = TextAlign.Center,
+                fontSize = 36.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
         Spacer(modifier = Modifier.height(36.dp))
-        LazyRow(modifier = Modifier
-            .fillMaxWidth()
-            .padding(12.dp)){
-            item {
-                CardMentor()
-                CardMentor()
-                CardMentor()
-                CardMentor()
-                CardMentor()
+        if (tipoCadastro == "Aprendiz") {
+            LazyRow(modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp)){
+                item {
+                    CardMentor()
+                    CardMentor()
+                    CardMentor()
+                    CardMentor()
+                    CardMentor()
+                }
+            }
+        } else if (tipoCadastro == "Mentor") {
+            LazyRow(modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp)){
+                item {
+                    CardAprendiz()
+                    CardAprendiz()
+                    CardAprendiz()
+                    CardAprendiz()
+                    CardAprendiz()
+                }
             }
         }
     }
@@ -163,8 +188,75 @@ fun CardMentor() {
     }
 }
 
+@Composable
+fun CardAprendiz() {
+    CardTemplate() {
+        Column(
+            modifier = Modifier
+                .padding(12.dp)
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "Bruna Letícia Martins da Silva",
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
+                fontSize = 18.sp
+            )
+            Row() {
+                Column() {
+                    Column() {
+                        Text(
+                            text = "Gênero",
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(bottom = 12.dp)
+                        )
+                        Text(text = "Feminino", modifier = Modifier.padding(bottom = 12.dp))
+                    }
+                    Column() {
+                        Text(
+                            text = "Interesses",
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(bottom = 12.dp)
+                        )
+                        Text(text = "Administração", modifier = Modifier.padding(bottom = 12.dp))
+                        Text(text = "Programação", modifier = Modifier.padding(bottom = 12.dp))
+                        Text(text = "Gestão de Pessoas", modifier = Modifier.padding(bottom = 12.dp))
+                        Text(text = "Metodologias ágeis", modifier = Modifier.padding(bottom = 12.dp))
+                        Text(text = "Mentoria", modifier = Modifier.padding(bottom = 12.dp))
+                        Text(text = "Administração", modifier = Modifier.padding(bottom = 12.dp))
+                        Text(text = "Programação", modifier = Modifier.padding(bottom = 12.dp))
+                        Text(text = "Gestão de Pessoas", modifier = Modifier.padding(bottom = 12.dp))
+                        Text(text = "Metodologias ágeis", modifier = Modifier.padding(bottom = 12.dp))
+                        Text(text = "Mentoria", modifier = Modifier.padding(bottom = 12.dp))
+                    }
+                }
+                Botao(
+                    onClick = { /*TODO*/ },
+                    texto = "Curtir",
+                    cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.purple_700)),
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .align(Alignment.CenterVertically)
+                        .padding(start = 36.dp),
+                    enabled = true
+                ) {
+                    Image(
+                        imageVector = Icons.Default.FavoriteBorder,
+                        contentDescription = "Perfil",
+                        colorFilter = ColorFilter.tint(Color.White),
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+                }
+            }
+        }
+    }
+}
+
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun InicioAprendizPreview() {
-    InicioAprendizScreen(rememberNavController())
+fun inicioPreview() {
+    InicioScreen(rememberNavController(), "Mentor")
 }

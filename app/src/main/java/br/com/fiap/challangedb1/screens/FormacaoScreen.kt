@@ -43,9 +43,9 @@ import br.com.fiap.challangedb1.enums.GrauInstrucao
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FormacaoAprdzScreen(navController: NavController) {
+fun FormacaoScreen(navController: NavController, tipoCadastro: String) {
 
-    TemplateScreen(nomeTela = "Formação") {
+    TemplateScreen(nomeTela = "Formação $tipoCadastro") {
 
         var curso by remember {
             mutableStateOf("")
@@ -142,7 +142,7 @@ fun FormacaoAprdzScreen(navController: NavController) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Botao(
-                    onClick = { navController.navigate("editarPerfilAprendiz") },
+                    onClick = { navController.navigate("editarPerfil/$tipoCadastro") },
                     texto = "Cancelar",
                     modifier = Modifier
                         .padding(horizontal = 24.dp)
@@ -152,7 +152,15 @@ fun FormacaoAprdzScreen(navController: NavController) {
                     enabled = true
                 ){}
                 Botao(
-                    onClick = { navController.navigate("editarPerfilAprendiz") },
+                    onClick = {
+                        if (tipoCadastro == "Aprendiz") {
+                            //API para salvar na tabela de aprendiz
+                            navController.navigate("editarPerfil/$tipoCadastro")
+                        } else if (tipoCadastro == "Mentor") {
+                            //API para salvar na tabela de mentor
+                            navController.navigate("editarPerfil/$tipoCadastro")
+                        }
+                    },
                     texto = "Salvar",
                     cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.black)),
                     modifier = Modifier
@@ -170,5 +178,5 @@ fun FormacaoAprdzScreen(navController: NavController) {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun FormacaoAprdzScreenPreview() {
-    FormacaoAprdzScreen(rememberNavController())
+    FormacaoScreen(rememberNavController(), "Mentor")
 }

@@ -86,9 +86,8 @@ fun LoginScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(36.dp))
             BotoesAprendizMentor(
                 tipoCadastro = tipoCadastro,
-                onClickAprendiz = { navController.navigate("inicioAprendiz") },
+                onClick = { navController.navigate("inicio/$tipoCadastro") },
                 txtBotaoAprendiz = "Login Aprendiz",
-                onClickMentor = { /*TODO*/ },
                 txtBotaoMentor = "Login Mentor",
                 txtDisabled = "Login",
                 modifier = Modifier

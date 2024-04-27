@@ -10,9 +10,8 @@ import br.com.fiap.challangedb1.R
 @Composable
 fun BotoesAprendizMentor(
     tipoCadastro: String,
-    onClickAprendiz: () -> Unit,
+    onClick: () -> Unit,
     txtBotaoAprendiz: String,
-    onClickMentor: () -> Unit,
     txtBotaoMentor: String,
     txtDisabled: String,
     modifier: Modifier
@@ -20,7 +19,7 @@ fun BotoesAprendizMentor(
 
     if (tipoCadastro == "Aprendiz") {
         Botao(
-            onClick = onClickAprendiz,
+            onClick = onClick,
             texto = txtBotaoAprendiz,
             modifier = modifier,
             cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.black)),
@@ -28,7 +27,7 @@ fun BotoesAprendizMentor(
         ){}
     } else if (tipoCadastro == "Mentor") {
         Botao(
-            onClick = onClickMentor,
+            onClick = onClick,
             texto = txtBotaoMentor,
             modifier = modifier,
             cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.black)),

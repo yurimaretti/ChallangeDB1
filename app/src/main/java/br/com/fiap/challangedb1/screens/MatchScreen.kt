@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
@@ -33,14 +32,14 @@ import br.com.fiap.challangedb1.components.CardTemplate
 import br.com.fiap.challangedb1.components.TemplateScreen
 
 @Composable
-fun MatchAprdzScreen(navController: NavController) {
-    TemplateScreen(nomeTela = "Matches") {
+fun MatchScreen(navController: NavController, tipoCadastro: String) {
+    TemplateScreen(nomeTela = "Matches do $tipoCadastro") {
         Column(modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
         ) {
             Text(
-                text = "Match de Mentores",
+                text = "Matches",
                 modifier = Modifier
                     .fillMaxWidth(),
                 textAlign = TextAlign.Center,
@@ -48,17 +47,29 @@ fun MatchAprdzScreen(navController: NavController) {
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(16.dp))
-            LazyRow(modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp)){
-                item {
-                    CardMatchAprdz()
-                    CardMatchAprdz()
-                    CardMatchAprdz()
+            if (tipoCadastro == "Aprendiz") {
+                LazyRow(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp)){
+                    item {
+                        CardMatchAprdz()
+                        CardMatchAprdz()
+                        CardMatchAprdz()
+                    }
+                }
+            } else if (tipoCadastro == "Mentor") {
+                LazyRow(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp)){
+                    item {
+                        CardMatchMentor()
+                        CardMatchMentor()
+                        CardMatchMentor()
+                    }
                 }
             }
             Botao(
-                onClick = { navController.navigate("inicioAprendiz") },
+                onClick = { navController.navigate("inicio/$tipoCadastro") },
                 texto = "Voltar",
                 cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.black)),
                 modifier = Modifier.fillMaxWidth(),
@@ -154,8 +165,93 @@ fun CardMatchAprdz() {
     }
 }
 
+@Composable
+fun CardMatchMentor() {
+    Column {
+        CardTemplate() {
+            Column(
+                modifier = Modifier
+                    .padding(12.dp)
+                    .width(240.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "Bruna Letícia Martins da Silva",
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp),
+                    fontSize = 18.sp,
+                    textAlign = TextAlign.Center
+                )
+                Row() {
+                    Column() {
+                        Column() {
+                            Text(
+                                text = "Gênero",
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(bottom = 12.dp)
+                            )
+                            Text(text = "Feminino", modifier = Modifier.padding(bottom = 12.dp))
+                        }
+                        Column() {
+                            Text(
+                                text = "Email para contato",
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(bottom = 12.dp)
+                            )
+                            Text(text = "brunalms@hotmail.com", modifier = Modifier.padding(bottom = 12.dp))
+                        }
+                        Column() {
+                            Text(
+                                text = "Interesses",
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(bottom = 12.dp)
+                            )
+                            Text(
+                                text = "Administração, Programação, Gestão de Pessoas, Metodologias ágeis, Mentoria, Administração",
+                                modifier = Modifier.padding(bottom = 12.dp)
+                            )
+                        }
+                        Column() {
+                            Text(
+                                text = "Formação",
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(bottom = 12.dp)
+                            )
+                            Text(
+                                text = "Engenharia de Alimentos na instituição UNESP",
+                                modifier = Modifier.padding(bottom = 12.dp)
+                            )
+                            Text(
+                                text = "Gestão da Qualidade e Segurança dos Alimentos na instituição UNICAMP",
+                                modifier = Modifier.padding(bottom = 12.dp)
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Botao(
+                            onClick = { /*TODO*/ },
+                            texto = "Desfazer Match",
+                            cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.purple_700)),
+                            modifier = Modifier.fillMaxWidth(),
+                            enabled = true
+                        ) {
+                            Image(
+                                imageVector = Icons.Default.Clear,
+                                contentDescription = "Desfazer",
+                                colorFilter = ColorFilter.tint(Color.White),
+                                modifier = Modifier.padding(start = 8.dp)
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun MatchAprdzPreview() {
-    MatchAprdzScreen(rememberNavController())
+    MatchScreen(rememberNavController(), "Mentor")
 }

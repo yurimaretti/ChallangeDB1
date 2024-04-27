@@ -33,9 +33,9 @@ import br.com.fiap.challangedb1.components.InputBox
 import br.com.fiap.challangedb1.components.TemplateScreen
 
 @Composable
-fun AlterarSenhaAprdzScreen(navController: NavController) {
+fun AlterarSenhaScreen(navController: NavController, tipoCadastro: String) {
 
-    TemplateScreen(nomeTela = "Alterar Senha") {
+    TemplateScreen(nomeTela = "Alterar Senha $tipoCadastro") {
 
         var senha1 by remember {
             mutableStateOf("")
@@ -82,7 +82,7 @@ fun AlterarSenhaAprdzScreen(navController: NavController) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Botao(
-                    onClick = { navController.navigate("editarPerfilAprendiz") },
+                    onClick = { navController.navigate("editarPerfil/$tipoCadastro") },
                     texto = "Cancelar",
                     modifier = Modifier
                         .padding(horizontal = 24.dp)
@@ -92,7 +92,15 @@ fun AlterarSenhaAprdzScreen(navController: NavController) {
                     enabled = true
                 ){}
                 Botao(
-                    onClick = { navController.navigate("editarPerfilAprendiz") },
+                    onClick = {
+                        if (tipoCadastro == "Aprendiz") {
+                            //API para salvar na tabela de aprendiz
+                            navController.navigate("editarPerfil/$tipoCadastro")
+                        } else if (tipoCadastro == "Mentor") {
+                            //API para salvar na tabela de mentor
+                            navController.navigate("editarPerfil/$tipoCadastro")
+                        }
+                    },
                     texto = "Salvar",
                     cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.black)),
                     modifier = Modifier
@@ -112,5 +120,5 @@ fun AlterarSenhaAprdzScreen(navController: NavController) {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun AlterarSenhaAprdzPreview() {
-    AlterarSenhaAprdzScreen(rememberNavController())
+    AlterarSenhaScreen(rememberNavController(), "Mentor")
 }

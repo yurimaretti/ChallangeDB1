@@ -199,13 +199,10 @@ fun CadastroScreen(navController: NavController) {
                 ){}
                 BotoesAprendizMentor(
                     tipoCadastro = tipoCadastro,
-                    onClickAprendiz = {
+                    onClick = {
                         navController.navigate("login")
                     },
                     txtBotaoAprendiz = "Cadastrar Aprendiz",
-                    onClickMentor = {
-                        navController.navigate("login")
-                    },
                     txtBotaoMentor = "Cadastrar Mentor",
                     txtDisabled = "Cadastrar",
                     modifier = Modifier

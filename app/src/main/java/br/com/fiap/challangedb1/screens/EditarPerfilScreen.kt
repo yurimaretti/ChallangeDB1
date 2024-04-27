@@ -51,9 +51,9 @@ import br.com.fiap.challangedb1.enums.Generos
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditarPerfilAprdzScreen(navController: NavController) {
+fun EditarPerfilScreen(navController: NavController, tipoCadastro: String) {
 
-    TemplateScreen(nomeTela = "Editar Perfil") {
+    TemplateScreen(nomeTela = "Editar Perfil $tipoCadastro") {
 
         var nome by remember {
             mutableStateOf("")
@@ -141,13 +141,20 @@ fun EditarPerfilAprdzScreen(navController: NavController) {
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = "Áreas de Interesse:",
-                modifier = Modifier.padding(start = 16.dp)
-            )
+            if (tipoCadastro == "Aprendiz") {
+                Text(
+                    text = "Áreas de Interesse:",
+                    modifier = Modifier.padding(start = 16.dp)
+                )
+            } else if (tipoCadastro == "Mentor") {
+                Text(
+                    text = "Habilidades:",
+                    modifier = Modifier.padding(start = 16.dp)
+                )
+            }
             Spacer(modifier = Modifier.height(16.dp))
 
-            //INÍCIO - Mock de áreas de interesse
+            //INÍCIO - Mock de áreas de interesse / Habilidades
 
             Row(
                 modifier = Modifier
@@ -202,7 +209,7 @@ fun EditarPerfilAprdzScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(16.dp))
             Botao(
-                onClick = { navController.navigate("formacaoAprendiz") },
+                onClick = { navController.navigate("formacao/$tipoCadastro") },
                 texto = "Incluir Formação",
                 cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.black)),
                 modifier = Modifier.fillMaxWidth(),
@@ -217,7 +224,7 @@ fun EditarPerfilAprdzScreen(navController: NavController) {
             }
             Spacer(modifier = Modifier.height(16.dp))
             Botao(
-                onClick = { navController.navigate("alterarSenhaAprendiz") },
+                onClick = { navController.navigate("alterarSenha/$tipoCadastro") },
                 texto = "Alterar Senha",
                 cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.black)),
                 modifier = Modifier.fillMaxWidth(),
@@ -236,7 +243,7 @@ fun EditarPerfilAprdzScreen(navController: NavController) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Botao(
-                    onClick = { navController.navigate("inicioAprendiz") },
+                    onClick = { navController.navigate("inicio/$tipoCadastro") },
                     texto = "Cancelar",
                     modifier = Modifier
                         .padding(horizontal = 24.dp)
@@ -246,7 +253,15 @@ fun EditarPerfilAprdzScreen(navController: NavController) {
                     enabled = true
                 ){}
                 Botao(
-                    onClick = { navController.navigate("inicioAprendiz") },
+                    onClick = {
+                        if (tipoCadastro == "Aprendiz") {
+                            //API para salvar na tabela de aprendiz
+                            navController.navigate("inicio/$tipoCadastro")
+                        } else if (tipoCadastro == "Mentor") {
+                            //API para salvar na tabela de mentor
+                            navController.navigate("inicio/$tipoCadastro")
+                        }
+                    },
                     texto = "Salvar",
                     cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.black)),
                     modifier = Modifier
@@ -266,5 +281,5 @@ fun EditarPerfilAprdzScreen(navController: NavController) {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun EditarPerfilAprdzPreview() {
-    EditarPerfilAprdzScreen(rememberNavController())
+    EditarPerfilScreen(rememberNavController(), "Aprendiz")
 }
