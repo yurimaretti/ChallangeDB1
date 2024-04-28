@@ -82,6 +82,9 @@ fun CadastroScreen(navController: NavController) {
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(16.dp))
+
+            //Formulário
+
             Column(modifier = Modifier.padding(horizontal = 12.dp)) {
                 InputBox(
                     label = "Nome",
@@ -110,6 +113,9 @@ fun CadastroScreen(navController: NavController) {
                     modifier = Modifier.padding(start = 8.dp)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
+
+                //Dropdown
+
                 ExposedDropdownMenuBox(
                     expanded = isExpanded,
                     onExpandedChange = { isExpanded = it },
@@ -171,6 +177,9 @@ fun CadastroScreen(navController: NavController) {
                     visualTransformation = PasswordVisualTransformation()
                 )
                 Spacer(modifier = Modifier.height(16.dp))
+
+                //Tipo do cadastro
+
                 Text(
                     text = "Tipo de Cadastro",
                     modifier = Modifier.padding(start = 8.dp)
@@ -183,6 +192,9 @@ fun CadastroScreen(navController: NavController) {
                 )
             }
             Spacer(modifier = Modifier.height(48.dp))
+
+            //Botões de retorno ou salvar
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween

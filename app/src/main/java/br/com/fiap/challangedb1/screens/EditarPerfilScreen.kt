@@ -84,6 +84,9 @@ fun EditarPerfilScreen(navController: NavController, tipoCadastro: String) {
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(16.dp))
+
+            //Formulário
+
             Column(modifier = Modifier.padding(horizontal = 12.dp)) {
                 InputBox(
                     label = "Nome",
@@ -208,6 +211,9 @@ fun EditarPerfilScreen(navController: NavController, tipoCadastro: String) {
             //FIM - Mock de áreas de interesse
 
             Spacer(modifier = Modifier.height(16.dp))
+
+            //Botões para editar formação e senha
+
             Botao(
                 onClick = { navController.navigate("formacao/$tipoCadastro") },
                 texto = "Incluir Formação",
@@ -238,6 +244,9 @@ fun EditarPerfilScreen(navController: NavController, tipoCadastro: String) {
                 )
             }
             Spacer(modifier = Modifier.height(48.dp))
+
+            //Botões para voltar e salvar
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -255,10 +264,10 @@ fun EditarPerfilScreen(navController: NavController, tipoCadastro: String) {
                 Botao(
                     onClick = {
                         if (tipoCadastro == "Aprendiz") {
-                            //API para salvar na tabela de aprendiz
+                            //TODO API para salvar na tabela de aprendiz
                             navController.navigate("inicio/$tipoCadastro")
                         } else if (tipoCadastro == "Mentor") {
-                            //API para salvar na tabela de mentor
+                            //TODO API para salvar na tabela de mentor
                             navController.navigate("inicio/$tipoCadastro")
                         }
                     },
@@ -269,9 +278,7 @@ fun EditarPerfilScreen(navController: NavController, tipoCadastro: String) {
                         .width(120.dp)
                         .height(70.dp),
                     enabled = true
-                ) {
-
-                }
+                ) {}
             }
             Spacer(modifier = Modifier.height(48.dp))
         }

@@ -53,6 +53,9 @@ fun AlterarSenhaScreen(navController: NavController, tipoCadastro: String) {
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(16.dp))
+
+            //Formulário
+
             Column(modifier = Modifier.padding(horizontal = 12.dp)) {
                 InputBox(
                     label = "Nova Senha",
@@ -77,6 +80,9 @@ fun AlterarSenhaScreen(navController: NavController, tipoCadastro: String) {
                 )
             }
             Spacer(modifier = Modifier.height(48.dp))
+
+            //Botões para voltar e salvar
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -94,10 +100,10 @@ fun AlterarSenhaScreen(navController: NavController, tipoCadastro: String) {
                 Botao(
                     onClick = {
                         if (tipoCadastro == "Aprendiz") {
-                            //API para salvar na tabela de aprendiz
+                            //TODO API para salvar na tabela de aprendiz
                             navController.navigate("editarPerfil/$tipoCadastro")
                         } else if (tipoCadastro == "Mentor") {
-                            //API para salvar na tabela de mentor
+                            //TODO API para salvar na tabela de mentor
                             navController.navigate("editarPerfil/$tipoCadastro")
                         }
                     },
@@ -108,9 +114,7 @@ fun AlterarSenhaScreen(navController: NavController, tipoCadastro: String) {
                         .width(120.dp)
                         .height(70.dp),
                     enabled = true
-                ) {
-
-                }
+                ) {}
             }
             Spacer(modifier = Modifier.height(48.dp))
         }

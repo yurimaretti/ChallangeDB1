@@ -47,6 +47,9 @@ fun MatchScreen(navController: NavController, tipoCadastro: String) {
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(16.dp))
+
+            //LazyRows dos Aprendizes / Mentores
+
             if (tipoCadastro == "Aprendiz") {
                 LazyRow(modifier = Modifier
                     .fillMaxWidth()
@@ -68,6 +71,9 @@ fun MatchScreen(navController: NavController, tipoCadastro: String) {
                     }
                 }
             }
+
+            //Retorno à tela anterior
+
             Botao(
                 onClick = { navController.navigate("inicio/$tipoCadastro") },
                 texto = "Voltar",
@@ -79,6 +85,8 @@ fun MatchScreen(navController: NavController, tipoCadastro: String) {
 
     }
 }
+
+//Templates dos cards de Match dos Aprendizes e Mentores
 
 @Composable
 fun CardMatchAprdz() {

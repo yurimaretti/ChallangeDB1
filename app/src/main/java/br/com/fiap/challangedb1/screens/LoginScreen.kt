@@ -54,6 +54,9 @@ fun LoginScreen(navController: NavController) {
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(16.dp))
+
+            //Formulário Login
+
             Column(modifier = Modifier.padding(horizontal = 12.dp)) {
                 InputBox(
                     label = "E-mail",
@@ -78,6 +81,9 @@ fun LoginScreen(navController: NavController) {
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
+
+            //Seletor do tipoCadastro e botão login
+
             SeletorAprdzMentor(
                 tipoCadastro = tipoCadastro,
                 onClickAprendiz = { tipoCadastro = "Aprendiz" },
@@ -94,6 +100,9 @@ fun LoginScreen(navController: NavController) {
                     .fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(48.dp))
+
+            //Botão para cadastro
+
             Divider(
                 color = Color.Black,
                 thickness = 1.dp,

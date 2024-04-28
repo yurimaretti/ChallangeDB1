@@ -70,6 +70,9 @@ fun FormacaoScreen(navController: NavController, tipoCadastro: String) {
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(16.dp))
+
+            //Formulário
+
             Column(modifier = Modifier.padding(horizontal = 12.dp)) {
                 Text(
                     text = "Nível",
@@ -137,6 +140,9 @@ fun FormacaoScreen(navController: NavController, tipoCadastro: String) {
                 )
             }
             Spacer(modifier = Modifier.height(48.dp))
+
+            //Botões para voltar e salvar
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -154,10 +160,10 @@ fun FormacaoScreen(navController: NavController, tipoCadastro: String) {
                 Botao(
                     onClick = {
                         if (tipoCadastro == "Aprendiz") {
-                            //API para salvar na tabela de aprendiz
+                            //TODO API para salvar na tabela de aprendiz
                             navController.navigate("editarPerfil/$tipoCadastro")
                         } else if (tipoCadastro == "Mentor") {
-                            //API para salvar na tabela de mentor
+                            //TODO API para salvar na tabela de mentor
                             navController.navigate("editarPerfil/$tipoCadastro")
                         }
                     },
