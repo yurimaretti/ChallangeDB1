@@ -22,7 +22,8 @@ fun InputBox(
     kayboardType: KeyboardType,
     modifier: Modifier,
     updateValue: (String) -> Unit,
-    visualTransformation: VisualTransformation
+    visualTransformation: VisualTransformation,
+    isError: Boolean
 ) {
     Text(text = label, modifier = Modifier.padding(start = 8.dp))
     OutlinedTextField(
@@ -37,6 +38,7 @@ fun InputBox(
         },
         keyboardOptions = KeyboardOptions(keyboardType = kayboardType),
         shape = RoundedCornerShape(16.dp),
-        visualTransformation = visualTransformation
+        visualTransformation = visualTransformation,
+        isError = isError
     )
 }

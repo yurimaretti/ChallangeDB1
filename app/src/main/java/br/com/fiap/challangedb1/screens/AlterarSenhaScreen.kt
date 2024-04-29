@@ -65,7 +65,8 @@ fun AlterarSenhaScreen(navController: NavController, tipoCadastro: String) {
                     modifier = Modifier
                         .fillMaxWidth(),
                     updateValue = { senha1 = it },
-                    visualTransformation = PasswordVisualTransformation()
+                    visualTransformation = PasswordVisualTransformation(),
+                    isError = false
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 InputBox(
@@ -76,7 +77,8 @@ fun AlterarSenhaScreen(navController: NavController, tipoCadastro: String) {
                     modifier = Modifier
                         .fillMaxWidth(),
                     updateValue = { senha2 = it },
-                    visualTransformation = PasswordVisualTransformation()
+                    visualTransformation = PasswordVisualTransformation(),
+                    isError = false
                 )
             }
             Spacer(modifier = Modifier.height(48.dp))

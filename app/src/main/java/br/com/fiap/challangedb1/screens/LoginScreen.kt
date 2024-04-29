@@ -66,7 +66,8 @@ fun LoginScreen(navController: NavController) {
                     modifier = Modifier
                         .fillMaxWidth(),
                     updateValue = { email = it },
-                    visualTransformation = VisualTransformation.None
+                    visualTransformation = VisualTransformation.None,
+                    isError = false
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 InputBox(
@@ -77,7 +78,8 @@ fun LoginScreen(navController: NavController) {
                     modifier = Modifier
                         .fillMaxWidth(),
                     updateValue = { senha = it },
-                    visualTransformation = PasswordVisualTransformation()
+                    visualTransformation = PasswordVisualTransformation(),
+                    isError = false
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))

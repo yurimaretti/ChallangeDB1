@@ -126,7 +126,8 @@ fun FormacaoScreen(navController: NavController, tipoCadastro: String) {
                     kayboardType = KeyboardType.Text,
                     modifier = Modifier,
                     updateValue = {},
-                    visualTransformation = VisualTransformation.None
+                    visualTransformation = VisualTransformation.None,
+                    isError = false
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 InputBox(
@@ -136,7 +137,8 @@ fun FormacaoScreen(navController: NavController, tipoCadastro: String) {
                     kayboardType = KeyboardType.Text,
                     modifier = Modifier,
                     updateValue = {},
-                    visualTransformation = VisualTransformation.None
+                    visualTransformation = VisualTransformation.None,
+                    isError = false
                 )
             }
             Spacer(modifier = Modifier.height(48.dp))

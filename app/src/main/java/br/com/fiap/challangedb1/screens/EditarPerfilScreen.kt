@@ -96,7 +96,8 @@ fun EditarPerfilScreen(navController: NavController, tipoCadastro: String) {
                     modifier = Modifier
                         .fillMaxWidth(),
                     updateValue = { nome = it },
-                    visualTransformation = VisualTransformation.None
+                    visualTransformation = VisualTransformation.None,
+                    isError = false
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
