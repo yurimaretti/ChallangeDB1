@@ -40,11 +40,13 @@ import br.com.fiap.challangedb1.components.Botao
 import br.com.fiap.challangedb1.components.BotoesAprendizMentor
 import br.com.fiap.challangedb1.components.CardTemplate
 import br.com.fiap.challangedb1.components.InputBox
+import br.com.fiap.challangedb1.components.MensagemErro
 import br.com.fiap.challangedb1.components.SeletorAprdzMentor
 import br.com.fiap.challangedb1.components.TemplateScreen
 import br.com.fiap.challangedb1.enums.Generos
+import br.com.fiap.challangedb1.util.validation.validacaoEmail
 import br.com.fiap.challangedb1.util.validation.validacaoGenero
-import br.com.fiap.challangedb1.util.validation.validacaoNomeEmail
+import br.com.fiap.challangedb1.util.validation.validacaoNome
 import br.com.fiap.challangedb1.util.validation.validacaoSenha
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -92,6 +94,9 @@ fun CadastroScreen(navController: NavController) {
             //Formulário
 
             Column(modifier = Modifier.padding(horizontal = 12.dp)) {
+
+                //Input NOME e validação
+
                 InputBox(
                     label = "Nome",
                     placeholder = "Informe seu nome",
@@ -101,18 +106,19 @@ fun CadastroScreen(navController: NavController) {
                         .fillMaxWidth(),
                     updateValue = { nome = it },
                     visualTransformation = VisualTransformation.None,
-                    isError = !validacaoNomeEmail(nome)
+                    isError = !validacaoNome(nome)
                 )
-                if (!validacaoNomeEmail(nome)) {
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = "Nome deve possuir de 2 a 70 caracteres",
-                        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                if (!validacaoNome(nome) && erroCadastro) {
+                    MensagemErro(
+                        mensagem = "Nome deve possuir de 2 a 70 caracteres",
                         textAlign = TextAlign.End,
-                        color = Color.Red,
-                        fontSize = 12.sp
+                        fontWeight = FontWeight.Normal,
+                        spacer = 4.dp
                     )
                 }
+
+                //Input EMAIL e validação
+
                 Spacer(modifier = Modifier.height(16.dp))
                 InputBox(
                     label = "E-mail",
@@ -123,27 +129,25 @@ fun CadastroScreen(navController: NavController) {
                         .fillMaxWidth(),
                     updateValue = { email = it },
                     visualTransformation = VisualTransformation.None,
-                    isError = !validacaoNomeEmail(email)
+                    isError = !validacaoEmail(email)
                 )
-                if (!validacaoNomeEmail(email)) {
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = "E-mail deve possuir de 2 a 70 caracteres",
-                        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                if (!validacaoEmail(email) && erroCadastro) {
+                    MensagemErro(
+                        mensagem = "Endereço de e-mail inválido",
                         textAlign = TextAlign.End,
-                        color = Color.Red,
-                        fontSize = 12.sp
+                        fontWeight = FontWeight.Normal,
+                        spacer = 4.dp
                     )
                 }
+
+                //Input GÊNERO (com dropdown) e validação
+
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = "Gênero",
                     modifier = Modifier.padding(start = 8.dp)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-
-                //Dropdown
-
                 ExposedDropdownMenuBox(
                     expanded = isExpanded,
                     onExpandedChange = { isExpanded = it },
@@ -183,16 +187,17 @@ fun CadastroScreen(navController: NavController) {
                         }
                     }
                 }
-                if (!validacaoGenero(genero)) {
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = "Genêro deve ser preenchido",
-                        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                if (!validacaoGenero(genero) && erroCadastro) {
+                    MensagemErro(
+                        mensagem = "Genêro deve ser preenchido",
                         textAlign = TextAlign.End,
-                        color = Color.Red,
-                        fontSize = 12.sp
+                        fontWeight = FontWeight.Normal,
+                        spacer = 4.dp
                     )
                 }
+
+                //Input SENHA e validação
+
                 Spacer(modifier = Modifier.height(16.dp))
                 InputBox(
                     label = "Senha",
@@ -205,16 +210,17 @@ fun CadastroScreen(navController: NavController) {
                     visualTransformation = PasswordVisualTransformation(),
                     isError = !validacaoSenha(senha1)
                 )
-                if (!validacaoSenha(senha1)) {
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = "Senha deve possuir de 6 a 15 caracteres",
-                        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                if (!validacaoSenha(senha1) && erroCadastro) {
+                    MensagemErro(
+                        mensagem = "Senha deve possuir de 6 a 15 caracteres",
                         textAlign = TextAlign.End,
-                        color = Color.Red,
-                        fontSize = 12.sp
+                        fontWeight = FontWeight.Normal,
+                        spacer = 4.dp
                     )
                 }
+
+                //Input CONFIRMA SENHA e validação
+
                 Spacer(modifier = Modifier.height(16.dp))
                 InputBox(
                     label = "Repita a Senha",
@@ -227,14 +233,12 @@ fun CadastroScreen(navController: NavController) {
                     visualTransformation = PasswordVisualTransformation(),
                     isError = !(senha2 == senha1)
                 )
-                if (!(senha2 == senha1)) {
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = "Senha deve ser idêntica ao campo anterior",
-                        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                if (!(senha2 == senha1) && erroCadastro) {
+                    MensagemErro(
+                        mensagem = "Senha deve ser idêntica ao campo anterior",
                         textAlign = TextAlign.End,
-                        color = Color.Red,
-                        fontSize = 12.sp
+                        fontWeight = FontWeight.Normal,
+                        spacer = 4.dp
                     )
                 }
                 Spacer(modifier = Modifier.height(16.dp))
@@ -274,14 +278,24 @@ fun CadastroScreen(navController: NavController) {
                     tipoCadastro = tipoCadastro,
                     onClick = {
                         if (tipoCadastro == "Aprendiz") {
-                            if (validacaoNomeEmail(nome) && validacaoNomeEmail(email) && validacaoSenha(senha1) && validacaoGenero(genero) && senha1 == senha2) {
+                            if (validacaoNome(nome) &&
+                                validacaoEmail(email) &&
+                                validacaoSenha(senha1) &&
+                                validacaoGenero(genero) &&
+                                senha1 == senha2
+                            ) {
                                 //TODO rota da API para cadastrar Aprendiz
                                 navController.navigate("login")
                             } else {
                                 erroCadastro = true
                             }
                         } else if (tipoCadastro == "Mentor") {
-                            if (validacaoNomeEmail(nome) && validacaoNomeEmail(email) && validacaoSenha(senha1) && validacaoGenero(genero) && senha1 == senha2) {
+                            if (validacaoNome(nome) &&
+                                validacaoEmail(email) &&
+                                validacaoSenha(senha1) &&
+                                validacaoGenero(genero) &&
+                                senha1 == senha2
+                            ) {
                                 //TODO rota da API para cadastrar Mentor
                                 navController.navigate("login")
                             } else {
@@ -298,15 +312,15 @@ fun CadastroScreen(navController: NavController) {
                         .height(70.dp)
                 )
             }
+
+            //Validação do formulário
+
             if (erroCadastro == true) {
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = "Preencha todos os campos do formulário",
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                MensagemErro(
+                    mensagem = "Preencha todos os campos do formulário",
                     textAlign = TextAlign.Center,
-                    color = Color.Red,
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    spacer = 36.dp
                 )
             }
             Spacer(modifier = Modifier.height(48.dp))

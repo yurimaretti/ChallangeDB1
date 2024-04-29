@@ -1,9 +1,19 @@
 package br.com.fiap.challangedb1.util.validation
 
-fun validacaoNomeEmail(texto: String): Boolean {
+fun validacaoNome(texto: String): Boolean {
     var isValid = false
 
     if (texto.length < 71 && texto.length > 1 && texto.isNotEmpty()) {
+        isValid = true
+    }
+
+    return isValid
+}
+
+fun validacaoEmail(texto: String): Boolean {
+    var isValid = false
+
+    if (android.util.Patterns.EMAIL_ADDRESS.matcher(texto).matches()) {
         isValid = true
     }
 
