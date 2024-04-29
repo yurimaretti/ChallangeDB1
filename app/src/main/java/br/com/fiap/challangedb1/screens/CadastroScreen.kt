@@ -67,7 +67,7 @@ fun CadastroScreen(navController: NavController) {
         var isExpanded by remember {
             mutableStateOf(false)
         }
-        var lista = Generos.values()
+        val lista = Generos.entries
         var senha1 by remember {
             mutableStateOf("")
         }

@@ -77,8 +77,8 @@ fun InicioScreen(navController: NavController, tipoCadastro: String) {
     var habilidades by remember {
         mutableStateOf("")
     }
-    var listaGrau = GrauInstrucao.values()
-    var listaHabilidade = GrauInstrucao.values() //TODO Usar Enum GrauInstrucao até criar API das habilidades/interesses
+    val listaGrau = GrauInstrucao.entries
+    val listaHabilidade = GrauInstrucao.entries //TODO Usar Enum GrauInstrucao até criar API das habilidades/interesses
 
     TemplateScreen(nomeTela = "Bem vindo $tipoCadastro!") {
 
@@ -377,7 +377,7 @@ fun CardMentor() {
                     }
                 }
                 Botao(
-                    onClick = { /*TODO*/ },
+                    onClick = { /*TODO incluir API para curtir*/ },
                     texto = "Curtir",
                     cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.purple_700)),
                     modifier = Modifier
@@ -444,7 +444,7 @@ fun CardAprendiz() {
                     }
                 }
                 Botao(
-                    onClick = { /*TODO*/ },
+                    onClick = { /*TODO incluir API para curtir*/ },
                     texto = "Curtir",
                     cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.purple_700)),
                     modifier = Modifier
@@ -467,6 +467,6 @@ fun CardAprendiz() {
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun inicioPreview() {
+fun InicioPreview() {
     InicioScreen(rememberNavController(), "Mentor")
 }

@@ -64,7 +64,7 @@ fun EditarPerfilScreen(navController: NavController, tipoCadastro: String) {
         var isExpanded by remember {
             mutableStateOf(false)
         }
-        var lista = Generos.values()
+        val lista = Generos.entries
         var direito by remember {
             mutableStateOf(false)
         }

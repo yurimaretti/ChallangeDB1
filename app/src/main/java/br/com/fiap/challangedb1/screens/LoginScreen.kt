@@ -94,7 +94,10 @@ fun LoginScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(36.dp))
             BotoesAprendizMentor(
                 tipoCadastro = tipoCadastro,
-                onClick = { navController.navigate("inicio/$tipoCadastro") },
+                onClick = {
+                    navController.navigate("inicio/$tipoCadastro")
+                    //TODO incluir API de validação do usuário e senha, e acrescentar o email do usuário na rota
+                },
                 txtBotaoAprendiz = "Login Aprendiz",
                 txtBotaoMentor = "Login Mentor",
                 txtDisabled = "Login",

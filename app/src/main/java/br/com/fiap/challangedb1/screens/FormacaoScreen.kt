@@ -47,10 +47,10 @@ fun FormacaoScreen(navController: NavController, tipoCadastro: String) {
 
     TemplateScreen(nomeTela = "Formação $tipoCadastro") {
 
-        var curso by remember {
+        val curso by remember {
             mutableStateOf("")
         }
-        var instituicao by remember {
+        val instituicao by remember {
             mutableStateOf("")
         }
         var grau by remember {
@@ -59,7 +59,7 @@ fun FormacaoScreen(navController: NavController, tipoCadastro: String) {
         var isExpanded by remember {
             mutableStateOf(false)
         }
-        var lista = GrauInstrucao.values()
+        val lista = GrauInstrucao.entries
 
         CardTemplate {
             Text(text = "Incluir Formação",
