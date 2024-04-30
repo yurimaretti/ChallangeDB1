@@ -46,8 +46,11 @@ import br.com.fiap.challangedb1.R
 import br.com.fiap.challangedb1.components.Botao
 import br.com.fiap.challangedb1.components.CardTemplate
 import br.com.fiap.challangedb1.components.InputBox
+import br.com.fiap.challangedb1.components.MensagemErro
 import br.com.fiap.challangedb1.components.TemplateScreen
 import br.com.fiap.challangedb1.enums.Generos
+import br.com.fiap.challangedb1.util.validation.validacaoDropdown
+import br.com.fiap.challangedb1.util.validation.validacaoNome
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -74,6 +77,9 @@ fun EditarPerfilScreen(navController: NavController, tipoCadastro: String) {
         var engenharia by remember {
             mutableStateOf(false)
         }
+        var erroCadastro by remember {
+            mutableStateOf(false)
+        }
 
         CardTemplate {
             Text(text = "Editar",
@@ -88,6 +94,9 @@ fun EditarPerfilScreen(navController: NavController, tipoCadastro: String) {
             //Formulário
 
             Column(modifier = Modifier.padding(horizontal = 12.dp)) {
+
+                //Input NOME e validação
+
                 InputBox(
                     label = "Nome",
                     placeholder = "Informe seu nome",
@@ -99,6 +108,17 @@ fun EditarPerfilScreen(navController: NavController, tipoCadastro: String) {
                     visualTransformation = VisualTransformation.None,
                     isError = false
                 )
+                if (!validacaoNome(nome) && erroCadastro) {
+                    MensagemErro(
+                        mensagem = "Nome deve possuir de 2 a 70 caracteres",
+                        textAlign = TextAlign.End,
+                        fontWeight = FontWeight.Normal,
+                        spacer = 4.dp
+                    )
+                }
+
+                //Input GÊNERO e validação
+
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = "Gênero",
@@ -122,7 +142,8 @@ fun EditarPerfilScreen(navController: NavController, tipoCadastro: String) {
                             .fillMaxWidth(),
                         readOnly = true,
                         colors = ExposedDropdownMenuDefaults.textFieldColors(),
-                        shape = RoundedCornerShape(16.dp)
+                        shape = RoundedCornerShape(16.dp),
+                        isError = false
                     )
                     ExposedDropdownMenu(
                         expanded = isExpanded,
@@ -143,7 +164,18 @@ fun EditarPerfilScreen(navController: NavController, tipoCadastro: String) {
                         }
                     }
                 }
+                if (!validacaoDropdown(genero) && erroCadastro) {
+                    MensagemErro(
+                        mensagem = "Genêro deve ser preenchido",
+                        textAlign = TextAlign.End,
+                        fontWeight = FontWeight.Normal,
+                        spacer = 4.dp
+                    )
+                }
             }
+
+            //Input de HABILIDADES/INTERESSES
+
             Spacer(modifier = Modifier.height(16.dp))
             if (tipoCadastro == "Aprendiz") {
                 Text(
@@ -211,10 +243,9 @@ fun EditarPerfilScreen(navController: NavController, tipoCadastro: String) {
 
             //FIM - Mock de áreas de interesse
 
+            //Botão para editar FORMAÇÃO
+
             Spacer(modifier = Modifier.height(16.dp))
-
-            //Botões para editar formação e senha
-
             Botao(
                 onClick = { navController.navigate("formacao/$tipoCadastro") },
                 texto = "Incluir Formação",
@@ -229,6 +260,9 @@ fun EditarPerfilScreen(navController: NavController, tipoCadastro: String) {
                     modifier = Modifier.padding(start = 8.dp)
                 )
             }
+
+            //Botão para editar SENHA
+
             Spacer(modifier = Modifier.height(16.dp))
             Botao(
                 onClick = { navController.navigate("alterarSenha/$tipoCadastro") },
@@ -265,11 +299,23 @@ fun EditarPerfilScreen(navController: NavController, tipoCadastro: String) {
                 Botao(
                     onClick = {
                         if (tipoCadastro == "Aprendiz") {
-                            //TODO API para salvar na tabela de aprendiz
-                            navController.navigate("inicio/$tipoCadastro")
+                            if (validacaoNome(nome) &&
+                                validacaoDropdown(genero)
+                            ) {
+                                //TODO API para salvar na tabela de aprendiz
+                                navController.navigate("inicio/$tipoCadastro")
+                            } else {
+                                erroCadastro = true
+                            }
                         } else if (tipoCadastro == "Mentor") {
-                            //TODO API para salvar na tabela de mentor
-                            navController.navigate("inicio/$tipoCadastro")
+                            if (validacaoNome(nome) &&
+                                validacaoDropdown(genero)
+                            ) {
+                                //TODO API para salvar na tabela de mentor
+                                navController.navigate("inicio/$tipoCadastro")
+                            } else {
+                                erroCadastro = true
+                            }
                         }
                     },
                     texto = "Salvar",
@@ -280,6 +326,17 @@ fun EditarPerfilScreen(navController: NavController, tipoCadastro: String) {
                         .height(70.dp),
                     enabled = true
                 ) {}
+            }
+
+            //Validação do formulário
+
+            if (erroCadastro == true) {
+                MensagemErro(
+                    mensagem = "Nome e Gênero devem estar preenchidos",
+                    textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.Bold,
+                    spacer = 36.dp
+                )
             }
             Spacer(modifier = Modifier.height(48.dp))
         }

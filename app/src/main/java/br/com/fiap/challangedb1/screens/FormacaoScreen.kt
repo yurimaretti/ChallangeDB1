@@ -38,8 +38,13 @@ import br.com.fiap.challangedb1.R
 import br.com.fiap.challangedb1.components.Botao
 import br.com.fiap.challangedb1.components.CardTemplate
 import br.com.fiap.challangedb1.components.InputBox
+import br.com.fiap.challangedb1.components.MensagemErro
 import br.com.fiap.challangedb1.components.TemplateScreen
 import br.com.fiap.challangedb1.enums.GrauInstrucao
+import br.com.fiap.challangedb1.util.validation.validacaoDropdown
+import br.com.fiap.challangedb1.util.validation.validacaoEmail
+import br.com.fiap.challangedb1.util.validation.validacaoNome
+import br.com.fiap.challangedb1.util.validation.validacaoSenha
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,10 +52,10 @@ fun FormacaoScreen(navController: NavController, tipoCadastro: String) {
 
     TemplateScreen(nomeTela = "Formação $tipoCadastro") {
 
-        val curso by remember {
+        var curso by remember {
             mutableStateOf("")
         }
-        val instituicao by remember {
+        var instituicao by remember {
             mutableStateOf("")
         }
         var grau by remember {
@@ -60,6 +65,9 @@ fun FormacaoScreen(navController: NavController, tipoCadastro: String) {
             mutableStateOf(false)
         }
         val lista = GrauInstrucao.entries
+        var erroCadastro by remember {
+            mutableStateOf(false)
+        }
 
         CardTemplate {
             Text(text = "Incluir Formação",
@@ -74,6 +82,9 @@ fun FormacaoScreen(navController: NavController, tipoCadastro: String) {
             //Formulário
 
             Column(modifier = Modifier.padding(horizontal = 12.dp)) {
+
+                //Input NÍVEL DA FORMAÇÃO e validação
+
                 Text(
                     text = "Nível",
                     modifier = Modifier.padding(start = 8.dp)
@@ -96,7 +107,8 @@ fun FormacaoScreen(navController: NavController, tipoCadastro: String) {
                             .fillMaxWidth(),
                         readOnly = true,
                         colors = ExposedDropdownMenuDefaults.textFieldColors(),
-                        shape = RoundedCornerShape(16.dp)
+                        shape = RoundedCornerShape(16.dp),
+                        isError = false
                     )
                     ExposedDropdownMenu(
                         expanded = isExpanded,
@@ -116,8 +128,18 @@ fun FormacaoScreen(navController: NavController, tipoCadastro: String) {
                             )
                         }
                     }
-
                 }
+                if (!validacaoDropdown(grau) && erroCadastro) {
+                    MensagemErro(
+                        mensagem = "Grau da Formação deve ser preenchida",
+                        textAlign = TextAlign.End,
+                        fontWeight = FontWeight.Normal,
+                        spacer = 4.dp
+                    )
+                }
+
+                //Input NOME DO CURSO DA FORMAÇÃO e validação
+
                 Spacer(modifier = Modifier.height(16.dp))
                 InputBox(
                     label = "Curso",
@@ -125,10 +147,21 @@ fun FormacaoScreen(navController: NavController, tipoCadastro: String) {
                     value = curso,
                     kayboardType = KeyboardType.Text,
                     modifier = Modifier,
-                    updateValue = {},
+                    updateValue = { curso  = it },
                     visualTransformation = VisualTransformation.None,
                     isError = false
                 )
+                if (!validacaoNome(curso) && erroCadastro) {
+                    MensagemErro(
+                        mensagem = "Nome deve possuir de 2 a 70 caracteres",
+                        textAlign = TextAlign.End,
+                        fontWeight = FontWeight.Normal,
+                        spacer = 4.dp
+                    )
+                }
+
+                //Input NOME DA INSTITUIÇÃO e validação
+
                 Spacer(modifier = Modifier.height(16.dp))
                 InputBox(
                     label = "Instituição",
@@ -136,10 +169,18 @@ fun FormacaoScreen(navController: NavController, tipoCadastro: String) {
                     value = instituicao,
                     kayboardType = KeyboardType.Text,
                     modifier = Modifier,
-                    updateValue = {},
+                    updateValue = { instituicao = it },
                     visualTransformation = VisualTransformation.None,
                     isError = false
                 )
+                if (!validacaoNome(instituicao) && erroCadastro) {
+                    MensagemErro(
+                        mensagem = "Nome deve possuir de 2 a 70 caracteres",
+                        textAlign = TextAlign.End,
+                        fontWeight = FontWeight.Normal,
+                        spacer = 4.dp
+                    )
+                }
             }
             Spacer(modifier = Modifier.height(48.dp))
 
@@ -162,11 +203,25 @@ fun FormacaoScreen(navController: NavController, tipoCadastro: String) {
                 Botao(
                     onClick = {
                         if (tipoCadastro == "Aprendiz") {
-                            //TODO API para salvar na tabela de aprendiz
-                            navController.navigate("editarPerfil/$tipoCadastro")
+                            if (validacaoNome(instituicao) &&
+                                validacaoNome(curso) &&
+                                validacaoDropdown(grau)
+                            ) {
+                                //TODO API para salvar na tabela de aprendiz
+                                navController.navigate("editarPerfil/$tipoCadastro")
+                            } else {
+                                erroCadastro = true
+                            }
                         } else if (tipoCadastro == "Mentor") {
-                            //TODO API para salvar na tabela de mentor
-                            navController.navigate("editarPerfil/$tipoCadastro")
+                            if (validacaoNome(instituicao) &&
+                                validacaoNome(curso) &&
+                                validacaoDropdown(grau)
+                            ) {
+                                //TODO API para salvar na tabela de mentor
+                                navController.navigate("editarPerfil/$tipoCadastro")
+                            } else {
+                                erroCadastro = true
+                            }
                         }
                     },
                     texto = "Salvar",
@@ -177,6 +232,17 @@ fun FormacaoScreen(navController: NavController, tipoCadastro: String) {
                         .height(70.dp),
                     enabled = true
                 ) {}
+            }
+
+            //Validação do formulário
+
+            if (erroCadastro == true) {
+                MensagemErro(
+                    mensagem = "Preencha todos os campos do formulário",
+                    textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.Bold,
+                    spacer = 36.dp
+                )
             }
             Spacer(modifier = Modifier.height(48.dp))
         }

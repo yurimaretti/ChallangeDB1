@@ -28,8 +28,11 @@ import br.com.fiap.challangedb1.components.BotaoOutline
 import br.com.fiap.challangedb1.components.BotoesAprendizMentor
 import br.com.fiap.challangedb1.components.CardTemplate
 import br.com.fiap.challangedb1.components.InputBox
+import br.com.fiap.challangedb1.components.MensagemErro
 import br.com.fiap.challangedb1.components.SeletorAprdzMentor
 import br.com.fiap.challangedb1.components.TemplateScreen
+import br.com.fiap.challangedb1.util.validation.validacaoEmail
+import br.com.fiap.challangedb1.util.validation.validacaoSenha
 
 @Composable
 fun LoginScreen(navController: NavController) {
@@ -42,6 +45,9 @@ fun LoginScreen(navController: NavController) {
     }
     var tipoCadastro by remember {
         mutableStateOf("")
+    }
+    var erroCadastro by remember {
+        mutableStateOf(false)
     }
 
     TemplateScreen(nomeTela = "Login") {
@@ -58,6 +64,9 @@ fun LoginScreen(navController: NavController) {
             //Formulário Login
 
             Column(modifier = Modifier.padding(horizontal = 12.dp)) {
+
+                //Input EMAIL e validação
+
                 InputBox(
                     label = "E-mail",
                     placeholder = "Informe seu e-mail",
@@ -69,6 +78,17 @@ fun LoginScreen(navController: NavController) {
                     visualTransformation = VisualTransformation.None,
                     isError = false
                 )
+                if (!validacaoEmail(email) && erroCadastro) {
+                    MensagemErro(
+                        mensagem = "Endereço de e-mail inválido",
+                        textAlign = TextAlign.End,
+                        fontWeight = FontWeight.Normal,
+                        spacer = 4.dp
+                    )
+                }
+
+                //Input SENHA e validação
+
                 Spacer(modifier = Modifier.height(16.dp))
                 InputBox(
                     label = "Senha",
@@ -81,6 +101,14 @@ fun LoginScreen(navController: NavController) {
                     visualTransformation = PasswordVisualTransformation(),
                     isError = false
                 )
+                if (!validacaoSenha(senha) && erroCadastro) {
+                    MensagemErro(
+                        mensagem = "Senha deve possuir de 6 a 15 caracteres",
+                        textAlign = TextAlign.End,
+                        fontWeight = FontWeight.Normal,
+                        spacer = 4.dp
+                    )
+                }
             }
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -95,8 +123,25 @@ fun LoginScreen(navController: NavController) {
             BotoesAprendizMentor(
                 tipoCadastro = tipoCadastro,
                 onClick = {
-                    navController.navigate("inicio/$tipoCadastro")
-                    //TODO incluir API de validação do usuário e senha, e acrescentar o email do usuário na rota
+                    if (tipoCadastro == "Aprendiz") {
+                        if (validacaoEmail(email) &&
+                            validacaoSenha(senha)
+                        ) {
+                            navController.navigate("inicio/$tipoCadastro")
+                            //TODO incluir API de validação do usuário e senha do Aprendiz, e acrescentar o email do usuário na rota
+                        } else {
+                            erroCadastro = true
+                        }
+                    } else if (tipoCadastro == "Mentor") {
+                        if (validacaoEmail(email) &&
+                            validacaoSenha(senha)
+                        ) {
+                            navController.navigate("inicio/$tipoCadastro")
+                            //TODO incluir API de validação do usuário e senha do Aprendiz, e acrescentar o email do usuário na rota
+                        } else {
+                            erroCadastro = true
+                        }
+                    }
                 },
                 txtBotaoAprendiz = "Login Aprendiz",
                 txtBotaoMentor = "Login Mentor",
@@ -104,6 +149,18 @@ fun LoginScreen(navController: NavController) {
                 modifier = Modifier
                     .fillMaxWidth()
             )
+
+            //Validação do formulário
+
+            if (erroCadastro == true) {
+                MensagemErro(
+                    mensagem = "Preencha login e senha",
+                    textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.Bold,
+                    spacer = 36.dp
+                )
+            }
+
             Spacer(modifier = Modifier.height(48.dp))
 
             //Botão para cadastro

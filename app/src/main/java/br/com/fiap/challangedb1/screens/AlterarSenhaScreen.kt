@@ -30,7 +30,12 @@ import br.com.fiap.challangedb1.R
 import br.com.fiap.challangedb1.components.Botao
 import br.com.fiap.challangedb1.components.CardTemplate
 import br.com.fiap.challangedb1.components.InputBox
+import br.com.fiap.challangedb1.components.MensagemErro
 import br.com.fiap.challangedb1.components.TemplateScreen
+import br.com.fiap.challangedb1.util.validation.validacaoDropdown
+import br.com.fiap.challangedb1.util.validation.validacaoEmail
+import br.com.fiap.challangedb1.util.validation.validacaoNome
+import br.com.fiap.challangedb1.util.validation.validacaoSenha
 
 @Composable
 fun AlterarSenhaScreen(navController: NavController, tipoCadastro: String) {
@@ -42,6 +47,9 @@ fun AlterarSenhaScreen(navController: NavController, tipoCadastro: String) {
         }
         var senha2 by remember {
             mutableStateOf("")
+        }
+        var erroCadastro by remember {
+            mutableStateOf(false)
         }
 
         CardTemplate {
@@ -57,6 +65,9 @@ fun AlterarSenhaScreen(navController: NavController, tipoCadastro: String) {
             //Formulário
 
             Column(modifier = Modifier.padding(horizontal = 12.dp)) {
+
+                //Input para alteração da SENHA
+
                 InputBox(
                     label = "Nova Senha",
                     placeholder = "Informe sua nova senha",
@@ -68,6 +79,17 @@ fun AlterarSenhaScreen(navController: NavController, tipoCadastro: String) {
                     visualTransformation = PasswordVisualTransformation(),
                     isError = false
                 )
+                if (!validacaoSenha(senha1) && erroCadastro) {
+                    MensagemErro(
+                        mensagem = "Senha deve possuir de 6 a 15 caracteres",
+                        textAlign = TextAlign.End,
+                        fontWeight = FontWeight.Normal,
+                        spacer = 4.dp
+                    )
+                }
+
+                //Input para confirmação da SENHA
+
                 Spacer(modifier = Modifier.height(16.dp))
                 InputBox(
                     label = "Confirme a Senha",
@@ -80,6 +102,14 @@ fun AlterarSenhaScreen(navController: NavController, tipoCadastro: String) {
                     visualTransformation = PasswordVisualTransformation(),
                     isError = false
                 )
+                if (!(senha2 == senha1) && erroCadastro) {
+                    MensagemErro(
+                        mensagem = "Senha deve ser idêntica ao campo anterior",
+                        textAlign = TextAlign.End,
+                        fontWeight = FontWeight.Normal,
+                        spacer = 4.dp
+                    )
+                }
             }
             Spacer(modifier = Modifier.height(48.dp))
 
@@ -102,11 +132,23 @@ fun AlterarSenhaScreen(navController: NavController, tipoCadastro: String) {
                 Botao(
                     onClick = {
                         if (tipoCadastro == "Aprendiz") {
-                            //TODO API para salvar na tabela de aprendiz
-                            navController.navigate("editarPerfil/$tipoCadastro")
+                            if (validacaoSenha(senha1) &&
+                                senha1 == senha2
+                            ) {
+                                //TODO API para salvar na tabela de aprendiz
+                                navController.navigate("editarPerfil/$tipoCadastro")
+                            } else {
+                                erroCadastro = true
+                            }
                         } else if (tipoCadastro == "Mentor") {
-                            //TODO API para salvar na tabela de mentor
-                            navController.navigate("editarPerfil/$tipoCadastro")
+                            if (validacaoSenha(senha1) &&
+                                senha1 == senha2
+                            ) {
+                                //TODO API para salvar na tabela de mentor
+                                navController.navigate("editarPerfil/$tipoCadastro")
+                            } else {
+                                erroCadastro = true
+                            }
                         }
                     },
                     texto = "Salvar",
@@ -117,6 +159,17 @@ fun AlterarSenhaScreen(navController: NavController, tipoCadastro: String) {
                         .height(70.dp),
                     enabled = true
                 ) {}
+            }
+
+            //Validação do formulário
+
+            if (erroCadastro == true) {
+                MensagemErro(
+                    mensagem = "Preencha todos os campos do formulário",
+                    textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.Bold,
+                    spacer = 36.dp
+                )
             }
             Spacer(modifier = Modifier.height(48.dp))
         }

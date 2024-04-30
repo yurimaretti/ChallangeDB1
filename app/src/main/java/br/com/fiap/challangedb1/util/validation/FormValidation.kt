@@ -30,7 +30,7 @@ fun validacaoSenha(texto: String): Boolean {
     return isValid
 }
 
-fun validacaoGenero(texto: String): Boolean {
+fun validacaoDropdown(texto: String): Boolean {
     var isValid = false
 
     if (texto.isNotEmpty()) {

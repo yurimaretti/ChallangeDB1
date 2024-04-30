@@ -45,7 +45,7 @@ import br.com.fiap.challangedb1.components.SeletorAprdzMentor
 import br.com.fiap.challangedb1.components.TemplateScreen
 import br.com.fiap.challangedb1.enums.Generos
 import br.com.fiap.challangedb1.util.validation.validacaoEmail
-import br.com.fiap.challangedb1.util.validation.validacaoGenero
+import br.com.fiap.challangedb1.util.validation.validacaoDropdown
 import br.com.fiap.challangedb1.util.validation.validacaoNome
 import br.com.fiap.challangedb1.util.validation.validacaoSenha
 
@@ -106,7 +106,7 @@ fun CadastroScreen(navController: NavController) {
                         .fillMaxWidth(),
                     updateValue = { nome = it },
                     visualTransformation = VisualTransformation.None,
-                    isError = !validacaoNome(nome)
+                    isError = false
                 )
                 if (!validacaoNome(nome) && erroCadastro) {
                     MensagemErro(
@@ -129,7 +129,7 @@ fun CadastroScreen(navController: NavController) {
                         .fillMaxWidth(),
                     updateValue = { email = it },
                     visualTransformation = VisualTransformation.None,
-                    isError = !validacaoEmail(email)
+                    isError = false
                 )
                 if (!validacaoEmail(email) && erroCadastro) {
                     MensagemErro(
@@ -166,7 +166,7 @@ fun CadastroScreen(navController: NavController) {
                         readOnly = true,
                         colors = ExposedDropdownMenuDefaults.textFieldColors(),
                         shape = RoundedCornerShape(16.dp),
-                        isError = !validacaoGenero(genero)
+                        isError = false
                     )
                     ExposedDropdownMenu(
                         expanded = isExpanded,
@@ -187,7 +187,7 @@ fun CadastroScreen(navController: NavController) {
                         }
                     }
                 }
-                if (!validacaoGenero(genero) && erroCadastro) {
+                if (!validacaoDropdown(genero) && erroCadastro) {
                     MensagemErro(
                         mensagem = "Genêro deve ser preenchido",
                         textAlign = TextAlign.End,
@@ -208,7 +208,7 @@ fun CadastroScreen(navController: NavController) {
                         .fillMaxWidth(),
                     updateValue = { senha1 = it },
                     visualTransformation = PasswordVisualTransformation(),
-                    isError = !validacaoSenha(senha1)
+                    isError = false
                 )
                 if (!validacaoSenha(senha1) && erroCadastro) {
                     MensagemErro(
@@ -231,7 +231,7 @@ fun CadastroScreen(navController: NavController) {
                         .fillMaxWidth(),
                     updateValue = { senha2 = it },
                     visualTransformation = PasswordVisualTransformation(),
-                    isError = !(senha2 == senha1)
+                    isError = false
                 )
                 if (!(senha2 == senha1) && erroCadastro) {
                     MensagemErro(
@@ -281,7 +281,7 @@ fun CadastroScreen(navController: NavController) {
                             if (validacaoNome(nome) &&
                                 validacaoEmail(email) &&
                                 validacaoSenha(senha1) &&
-                                validacaoGenero(genero) &&
+                                validacaoDropdown(genero) &&
                                 senha1 == senha2
                             ) {
                                 //TODO rota da API para cadastrar Aprendiz
@@ -293,7 +293,7 @@ fun CadastroScreen(navController: NavController) {
                             if (validacaoNome(nome) &&
                                 validacaoEmail(email) &&
                                 validacaoSenha(senha1) &&
-                                validacaoGenero(genero) &&
+                                validacaoDropdown(genero) &&
                                 senha1 == senha2
                             ) {
                                 //TODO rota da API para cadastrar Mentor
