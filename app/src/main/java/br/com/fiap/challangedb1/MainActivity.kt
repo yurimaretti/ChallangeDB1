@@ -19,6 +19,7 @@ import br.com.fiap.challangedb1.screens.CadastroScreen
 import br.com.fiap.challangedb1.screens.EditarPerfilScreen
 import br.com.fiap.challangedb1.screens.FormacaoScreen
 import br.com.fiap.challangedb1.screens.InicioScreen
+import br.com.fiap.challangedb1.screens.InteressesScreen
 import br.com.fiap.challangedb1.screens.LoginScreen
 import br.com.fiap.challangedb1.screens.MatchScreen
 import br.com.fiap.challangedb1.ui.theme.ChallangeDB1Theme
@@ -106,6 +107,17 @@ class MainActivity : ComponentActivity() {
                         ) {
                             val tipoCadastro: String? = it.arguments?.getString("tipoCadastro")
                             MatchScreen(navController = navController, tipoCadastro!!)
+                        }
+                        composable(
+                            route = "interesses/{tipoCadastro}",
+                            arguments = listOf(
+                                navArgument("tipoCadastro"){
+                                    type = NavType.StringType
+                                }
+                            )
+                        ) {
+                            val tipoCadastro: String? = it.arguments?.getString("tipoCadastro")
+                            InteressesScreen(navController = navController, tipoCadastro!!)
                         }
                     }
                 }

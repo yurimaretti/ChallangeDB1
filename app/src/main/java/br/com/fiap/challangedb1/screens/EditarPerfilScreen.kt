@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.ButtonDefaults
@@ -56,7 +58,7 @@ import br.com.fiap.challangedb1.util.validation.validacaoNome
 @Composable
 fun EditarPerfilScreen(navController: NavController, tipoCadastro: String) {
 
-    TemplateScreen(nomeTela = "Editar Perfil $tipoCadastro") {
+    TemplateScreen(nomeTela = "Perfil $tipoCadastro") {
 
         var nome by remember {
             mutableStateOf("")
@@ -68,15 +70,6 @@ fun EditarPerfilScreen(navController: NavController, tipoCadastro: String) {
             mutableStateOf(false)
         }
         val lista = Generos.entries
-        var direito by remember {
-            mutableStateOf(false)
-        }
-        var tecnologia by remember {
-            mutableStateOf(false)
-        }
-        var engenharia by remember {
-            mutableStateOf(false)
-        }
         var erroCadastro by remember {
             mutableStateOf(false)
         }
@@ -174,74 +167,41 @@ fun EditarPerfilScreen(navController: NavController, tipoCadastro: String) {
                 }
             }
 
-            //Input de HABILIDADES/INTERESSES
+            //Botão para editar HABILIDADES/INTERESSES
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(32.dp))
+
             if (tipoCadastro == "Aprendiz") {
-                Text(
-                    text = "Áreas de Interesse:",
-                    modifier = Modifier.padding(start = 16.dp)
-                )
+                Botao(
+                    onClick = { navController.navigate("interesses/$tipoCadastro") },
+                    texto = "Incluir Interesses",
+                    cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.black)),
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = true
+                ) {
+                    Image(
+                        imageVector = Icons.Default.AddCircle,
+                        contentDescription = "Interesses",
+                        colorFilter = ColorFilter.tint(Color.White),
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+                }
             } else if (tipoCadastro == "Mentor") {
-                Text(
-                    text = "Habilidades:",
-                    modifier = Modifier.padding(start = 16.dp)
-                )
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-
-            //INÍCIO - Mock de áreas de interesse / Habilidades
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Checkbox(
-                    checked = tecnologia,
-                    onCheckedChange = { tecnologia = it },
-                    colors = CheckboxDefaults.colors(
-                        checkedColor = Color(0, 0, 0, 255),
-                        uncheckedColor = Color.Gray
+                Botao(
+                    onClick = { navController.navigate("interesses/$tipoCadastro") },
+                    texto = "Incluir Habilidades",
+                    cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.black)),
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = true
+                ) {
+                    Image(
+                        imageVector = Icons.Default.AddCircle,
+                        contentDescription = "Interesses",
+                        colorFilter = ColorFilter.tint(Color.White),
+                        modifier = Modifier.padding(start = 8.dp)
                     )
-                )
-                Text(text = "Tecnologia", color = Color.Black, fontWeight = FontWeight.ExtraBold)
+                }
             }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Checkbox(
-                    checked = direito,
-                    onCheckedChange = { direito = it },
-                    colors = CheckboxDefaults.colors(
-                        checkedColor = Color(0, 0, 0, 255),
-                        uncheckedColor = Color.Gray
-                    )
-                )
-                Text(text = "Direito", color = Color.Black, fontWeight = FontWeight.ExtraBold)
-            }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Checkbox(
-                    checked = engenharia,
-                    onCheckedChange = { engenharia = it },
-                    colors = CheckboxDefaults.colors(
-                        checkedColor = Color(0, 0, 0, 255),
-                        uncheckedColor = Color.Gray
-                    )
-                )
-                Text(text = "Engenharia", color = Color.Black, fontWeight = FontWeight.ExtraBold)
-            }
-
-            //FIM - Mock de áreas de interesse
 
             //Botão para editar FORMAÇÃO
 
