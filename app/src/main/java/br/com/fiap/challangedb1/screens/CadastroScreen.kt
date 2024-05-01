@@ -1,5 +1,7 @@
 package br.com.fiap.challangedb1.screens
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -44,16 +47,24 @@ import br.com.fiap.challangedb1.components.MensagemErro
 import br.com.fiap.challangedb1.components.SeletorAprdzMentor
 import br.com.fiap.challangedb1.components.TemplateScreen
 import br.com.fiap.challangedb1.enums.Generos
+import br.com.fiap.challangedb1.model.AprendizModel
+import br.com.fiap.challangedb1.model.MentorModel
+import br.com.fiap.challangedb1.service.RetrofitInstance
 import br.com.fiap.challangedb1.util.validation.validacaoEmail
 import br.com.fiap.challangedb1.util.validation.validacaoDropdown
 import br.com.fiap.challangedb1.util.validation.validacaoNome
 import br.com.fiap.challangedb1.util.validation.validacaoSenha
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CadastroScreen(navController: NavController) {
 
     TemplateScreen(nomeTela = "Cadastre-se") {
+
+        val context = LocalContext.current
 
         var nome by remember {
             mutableStateOf("")
@@ -80,6 +91,9 @@ fun CadastroScreen(navController: NavController) {
         var erroCadastro by remember {
             mutableStateOf(false)
         }
+        val apiService = RetrofitInstance.apiService
+        val aprendiz = AprendizModel(email, nome, genero, senha1)
+        val mentor = MentorModel(email, nome, genero, senha1)
 
         CardTemplate {
             Text(text = "Cadastro",
@@ -284,8 +298,21 @@ fun CadastroScreen(navController: NavController) {
                                 validacaoDropdown(genero) &&
                                 senha1 == senha2
                             ) {
-                                //TODO rota da API para cadastrar Aprendiz
-                                navController.navigate("login")
+                                val call = apiService.incluirAprdz(aprendiz)
+
+                                call.enqueue(object : Callback<AprendizModel> {
+                                    override fun onResponse(call: Call<AprendizModel>, response: Response<AprendizModel>) {
+                                        if (response.isSuccessful) {
+                                            Toast.makeText(context, "Usuário adicionado!", Toast.LENGTH_LONG).show();
+                                            navController.navigate("login")
+                                        } else {
+                                            Toast.makeText(context, "Ops, algo deu errado... Pode tentar de novo?", Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                    override fun onFailure(call: Call<AprendizModel>, t: Throwable) {
+                                        Log.e("TAG", "Erro na chamada à API: ${t.message}")
+                                    }
+                                })
                             } else {
                                 erroCadastro = true
                             }
@@ -296,8 +323,21 @@ fun CadastroScreen(navController: NavController) {
                                 validacaoDropdown(genero) &&
                                 senha1 == senha2
                             ) {
-                                //TODO rota da API para cadastrar Mentor
-                                navController.navigate("login")
+                                val call = apiService.incluirMentor(mentor)
+
+                                call.enqueue(object : Callback<MentorModel> {
+                                    override fun onResponse(call: Call<MentorModel>, response: Response<MentorModel>) {
+                                        if (response.isSuccessful) {
+                                            Toast.makeText(context, "Usuário adicionado!", Toast.LENGTH_LONG).show();
+                                            navController.navigate("login")
+                                        } else {
+                                            Toast.makeText(context, "Ops, algo deu errado... Pode tentar de novo?", Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                    override fun onFailure(call: Call<MentorModel>, t: Throwable) {
+                                        Log.e("TAG", "Erro na chamada à API: ${t.message}")
+                                    }
+                                })
                             } else {
                                 erroCadastro = true
                             }
