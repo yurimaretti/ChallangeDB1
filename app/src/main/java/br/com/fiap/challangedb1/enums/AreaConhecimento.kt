@@ -19,5 +19,6 @@ enum class AreaConhecimento(val area: String) {
     HIST("História"),
     POLITICA("Ciências Políticas"),
     LETRAS("Letras"),
-    ARTES("Artes")
+    ARTES("Artes"),
+    OUTROS("Outros")
 }

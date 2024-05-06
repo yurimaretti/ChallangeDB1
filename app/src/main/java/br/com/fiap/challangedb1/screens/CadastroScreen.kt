@@ -147,7 +147,7 @@ fun CadastroScreen(navController: NavController) {
                 )
                 if (!validacaoEmail(email) && erroCadastro) {
                     MensagemErro(
-                        mensagem = "Endereço de e-mail inválido",
+                        mensagem = "Informe um e-mail válido com no máximo 70 caracteres",
                         textAlign = TextAlign.End,
                         fontWeight = FontWeight.Normal,
                         spacer = 4.dp

@@ -13,7 +13,7 @@ fun validacaoNome(texto: String): Boolean {
 fun validacaoEmail(texto: String): Boolean {
     var isValid = false
 
-    if (android.util.Patterns.EMAIL_ADDRESS.matcher(texto).matches()) {
+    if (android.util.Patterns.EMAIL_ADDRESS.matcher(texto).matches() && texto.length < 71) {
         isValid = true
     }
 
