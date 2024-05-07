@@ -56,7 +56,7 @@ import br.com.fiap.challangedb1.util.validation.validacaoNome
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditarPerfilScreen(navController: NavController, tipoCadastro: String) {
+fun EditarPerfilScreen(navController: NavController, tipoCadastro: String, email: String) {
 
     TemplateScreen(nomeTela = "Perfil $tipoCadastro") {
 
@@ -173,7 +173,7 @@ fun EditarPerfilScreen(navController: NavController, tipoCadastro: String) {
 
             if (tipoCadastro == "Aprendiz") {
                 Botao(
-                    onClick = { navController.navigate("interesses/$tipoCadastro") },
+                    onClick = { navController.navigate("interesses/$tipoCadastro/$email") },
                     texto = "Incluir Interesses",
                     cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.black)),
                     modifier = Modifier.fillMaxWidth(),
@@ -188,7 +188,7 @@ fun EditarPerfilScreen(navController: NavController, tipoCadastro: String) {
                 }
             } else if (tipoCadastro == "Mentor") {
                 Botao(
-                    onClick = { navController.navigate("interesses/$tipoCadastro") },
+                    onClick = { navController.navigate("interesses/$tipoCadastro/$email") },
                     texto = "Incluir Habilidades",
                     cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.black)),
                     modifier = Modifier.fillMaxWidth(),
@@ -207,7 +207,7 @@ fun EditarPerfilScreen(navController: NavController, tipoCadastro: String) {
 
             Spacer(modifier = Modifier.height(16.dp))
             Botao(
-                onClick = { navController.navigate("formacao/$tipoCadastro") },
+                onClick = { navController.navigate("formacao/$tipoCadastro/$email") },
                 texto = "Incluir Formação",
                 cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.black)),
                 modifier = Modifier.fillMaxWidth(),
@@ -225,7 +225,7 @@ fun EditarPerfilScreen(navController: NavController, tipoCadastro: String) {
 
             Spacer(modifier = Modifier.height(16.dp))
             Botao(
-                onClick = { navController.navigate("alterarSenha/$tipoCadastro") },
+                onClick = { navController.navigate("alterarSenha/$tipoCadastro/$email") },
                 texto = "Alterar Senha",
                 cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.black)),
                 modifier = Modifier.fillMaxWidth(),
@@ -247,7 +247,7 @@ fun EditarPerfilScreen(navController: NavController, tipoCadastro: String) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Botao(
-                    onClick = { navController.navigate("inicio/$tipoCadastro") },
+                    onClick = { navController.navigate("inicio/$tipoCadastro/$email") },
                     texto = "Cancelar",
                     modifier = Modifier
                         .padding(horizontal = 24.dp)
@@ -263,7 +263,7 @@ fun EditarPerfilScreen(navController: NavController, tipoCadastro: String) {
                                 validacaoDropdown(genero)
                             ) {
                                 //TODO API para salvar na tabela de aprendiz
-                                navController.navigate("inicio/$tipoCadastro")
+                                navController.navigate("inicio/$tipoCadastro/$email")
                             } else {
                                 erroCadastro = true
                             }
@@ -272,7 +272,7 @@ fun EditarPerfilScreen(navController: NavController, tipoCadastro: String) {
                                 validacaoDropdown(genero)
                             ) {
                                 //TODO API para salvar na tabela de mentor
-                                navController.navigate("inicio/$tipoCadastro")
+                                navController.navigate("inicio/$tipoCadastro/$email")
                             } else {
                                 erroCadastro = true
                             }
@@ -306,5 +306,5 @@ fun EditarPerfilScreen(navController: NavController, tipoCadastro: String) {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun EditarPerfilAprdzPreview() {
-    EditarPerfilScreen(rememberNavController(), "Aprendiz")
+    EditarPerfilScreen(rememberNavController(), "Aprendiz", "")
 }

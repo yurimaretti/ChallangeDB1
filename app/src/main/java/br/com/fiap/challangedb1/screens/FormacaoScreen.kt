@@ -48,7 +48,7 @@ import br.com.fiap.challangedb1.util.validation.validacaoSenha
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FormacaoScreen(navController: NavController, tipoCadastro: String) {
+fun FormacaoScreen(navController: NavController, tipoCadastro: String, email: String) {
 
     TemplateScreen(nomeTela = "Formação $tipoCadastro") {
 
@@ -191,7 +191,7 @@ fun FormacaoScreen(navController: NavController, tipoCadastro: String) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Botao(
-                    onClick = { navController.navigate("editarPerfil/$tipoCadastro") },
+                    onClick = { navController.navigate("editarPerfil/$tipoCadastro/$email") },
                     texto = "Cancelar",
                     modifier = Modifier
                         .padding(horizontal = 24.dp)
@@ -208,7 +208,7 @@ fun FormacaoScreen(navController: NavController, tipoCadastro: String) {
                                 validacaoDropdown(grau)
                             ) {
                                 //TODO API para salvar na tabela de aprendiz
-                                navController.navigate("editarPerfil/$tipoCadastro")
+                                navController.navigate("editarPerfil/$tipoCadastro/$email")
                             } else {
                                 erroCadastro = true
                             }
@@ -218,7 +218,7 @@ fun FormacaoScreen(navController: NavController, tipoCadastro: String) {
                                 validacaoDropdown(grau)
                             ) {
                                 //TODO API para salvar na tabela de mentor
-                                navController.navigate("editarPerfil/$tipoCadastro")
+                                navController.navigate("editarPerfil/$tipoCadastro/$email")
                             } else {
                                 erroCadastro = true
                             }
@@ -252,5 +252,5 @@ fun FormacaoScreen(navController: NavController, tipoCadastro: String) {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun FormacaoAprdzScreenPreview() {
-    FormacaoScreen(rememberNavController(), "Mentor")
+    FormacaoScreen(rememberNavController(), "Mentor", "")
 }

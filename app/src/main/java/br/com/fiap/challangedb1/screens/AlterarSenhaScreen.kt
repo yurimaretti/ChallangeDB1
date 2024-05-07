@@ -38,7 +38,7 @@ import br.com.fiap.challangedb1.util.validation.validacaoNome
 import br.com.fiap.challangedb1.util.validation.validacaoSenha
 
 @Composable
-fun AlterarSenhaScreen(navController: NavController, tipoCadastro: String) {
+fun AlterarSenhaScreen(navController: NavController, tipoCadastro: String, email: String) {
 
     TemplateScreen(nomeTela = "Alterar Senha $tipoCadastro") {
 
@@ -120,7 +120,7 @@ fun AlterarSenhaScreen(navController: NavController, tipoCadastro: String) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Botao(
-                    onClick = { navController.navigate("editarPerfil/$tipoCadastro") },
+                    onClick = { navController.navigate("editarPerfil/$tipoCadastro/$email") },
                     texto = "Cancelar",
                     modifier = Modifier
                         .padding(horizontal = 24.dp)
@@ -136,7 +136,7 @@ fun AlterarSenhaScreen(navController: NavController, tipoCadastro: String) {
                                 senha1 == senha2
                             ) {
                                 //TODO API para salvar na tabela de aprendiz
-                                navController.navigate("editarPerfil/$tipoCadastro")
+                                navController.navigate("editarPerfil/$tipoCadastro/$email")
                             } else {
                                 erroCadastro = true
                             }
@@ -145,7 +145,7 @@ fun AlterarSenhaScreen(navController: NavController, tipoCadastro: String) {
                                 senha1 == senha2
                             ) {
                                 //TODO API para salvar na tabela de mentor
-                                navController.navigate("editarPerfil/$tipoCadastro")
+                                navController.navigate("editarPerfil/$tipoCadastro/$email")
                             } else {
                                 erroCadastro = true
                             }
@@ -179,5 +179,5 @@ fun AlterarSenhaScreen(navController: NavController, tipoCadastro: String) {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun AlterarSenhaAprdzPreview() {
-    AlterarSenhaScreen(rememberNavController(), "Mentor")
+    AlterarSenhaScreen(rememberNavController(), "Mentor", "")
 }

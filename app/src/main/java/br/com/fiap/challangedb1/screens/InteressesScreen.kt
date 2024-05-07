@@ -35,7 +35,7 @@ import br.com.fiap.challangedb1.util.validation.validacaoDropdown
 import br.com.fiap.challangedb1.util.validation.validacaoNome
 
 @Composable
-fun InteressesScreen(navController: NavController, tipoCadastro: String) {
+fun InteressesScreen(navController: NavController, tipoCadastro: String, email: String) {
 
     //Função para nome variável da Tela
 
@@ -98,7 +98,7 @@ fun InteressesScreen(navController: NavController, tipoCadastro: String) {
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Botao(
-                        onClick = { navController.navigate("editarPerfil/$tipoCadastro") },
+                        onClick = { navController.navigate("editarPerfil/$tipoCadastro/$email") },
                         texto = "Cancelar",
                         modifier = Modifier
                             .padding(horizontal = 24.dp)
@@ -118,7 +118,7 @@ fun InteressesScreen(navController: NavController, tipoCadastro: String) {
                                     // Exemplo:
                                     // database.enviarDescricaoAreaConhecimento(descricao)
                                 }
-                                navController.navigate("editarPerfil/$tipoCadastro")
+                                navController.navigate("editarPerfil/$tipoCadastro/$email")
                             } else if (tipoCadastro == "Mentor") {
                                 areasSelecionadas.forEach { area ->
                                     val descricao = area.area
@@ -127,7 +127,7 @@ fun InteressesScreen(navController: NavController, tipoCadastro: String) {
                                     // Exemplo:
                                     // database.enviarDescricaoAreaConhecimento(descricao)
                                 }
-                                navController.navigate("editarPerfil/$tipoCadastro")
+                                navController.navigate("editarPerfil/$tipoCadastro/$email")
                             }
                         },
                         texto = "Salvar",
@@ -148,5 +148,5 @@ fun InteressesScreen(navController: NavController, tipoCadastro: String) {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun InteressesPreview() {
-    InteressesScreen(rememberNavController(), "Aprendiz")
+    InteressesScreen(rememberNavController(), "Aprendiz", "")
 }

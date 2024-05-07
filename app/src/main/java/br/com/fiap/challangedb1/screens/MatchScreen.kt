@@ -32,7 +32,7 @@ import br.com.fiap.challangedb1.components.CardTemplate
 import br.com.fiap.challangedb1.components.TemplateScreen
 
 @Composable
-fun MatchScreen(navController: NavController, tipoCadastro: String) {
+fun MatchScreen(navController: NavController, tipoCadastro: String, email: String) {
     TemplateScreen(nomeTela = "Matches do $tipoCadastro") {
         Column(modifier = Modifier
             .fillMaxWidth()
@@ -75,7 +75,7 @@ fun MatchScreen(navController: NavController, tipoCadastro: String) {
             //Retorno à tela anterior
 
             Botao(
-                onClick = { navController.navigate("inicio/$tipoCadastro") },
+                onClick = { navController.navigate("inicio/$tipoCadastro/$email") },
                 texto = "Voltar",
                 cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.black)),
                 modifier = Modifier.fillMaxWidth(),
@@ -261,5 +261,5 @@ fun CardMatchMentor() {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun MatchAprdzPreview() {
-    MatchScreen(rememberNavController(), "Mentor")
+    MatchScreen(rememberNavController(), "Mentor", "")
 }

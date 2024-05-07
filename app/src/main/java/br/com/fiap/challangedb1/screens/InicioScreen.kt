@@ -54,31 +54,26 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import br.com.fiap.challangedb1.R
 import br.com.fiap.challangedb1.components.Botao
+import br.com.fiap.challangedb1.components.BotaoOutline
 import br.com.fiap.challangedb1.components.CardTemplate
 import br.com.fiap.challangedb1.components.TemplateScreen
+import br.com.fiap.challangedb1.enums.AreaConhecimento
 import br.com.fiap.challangedb1.enums.GrauInstrucao
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun InicioScreen(navController: NavController, tipoCadastro: String) {
+fun InicioScreen(navController: NavController, tipoCadastro: String, email: String) {
 
     var expandedSeach by remember {
         mutableStateOf (false)
     }
-    var expandedDropdownGrau by remember {
-        mutableStateOf(false)
-    }
     var expandedDropdownHab by remember {
         mutableStateOf(false)
-    }
-    var grau by remember {
-        mutableStateOf("")
     }
     var habilidades by remember {
         mutableStateOf("")
     }
-    val listaGrau = GrauInstrucao.entries
-    val listaHabilidade = GrauInstrucao.entries //TODO Usar Enum GrauInstrucao até criar API das habilidades/interesses
+    val listaHabilidade = AreaConhecimento.entries
 
     TemplateScreen(nomeTela = "Bem vindo $tipoCadastro!") {
 
@@ -91,7 +86,7 @@ fun InicioScreen(navController: NavController, tipoCadastro: String) {
                 .padding(12.dp)
         ) {
             Botao(
-                onClick = { navController.navigate("editarPerfil/$tipoCadastro") },
+                onClick = { navController.navigate("editarPerfil/$tipoCadastro/$email") },
                 texto = "Editar Perfil",
                 cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.black)),
                 modifier = Modifier,
@@ -105,7 +100,7 @@ fun InicioScreen(navController: NavController, tipoCadastro: String) {
                 )
             }
             Botao(
-                onClick = { navController.navigate("match/$tipoCadastro") },
+                onClick = { navController.navigate("match/$tipoCadastro/$email") },
                 texto = "Matches",
                 cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.purple_700)),
                 modifier = Modifier,
@@ -113,6 +108,44 @@ fun InicioScreen(navController: NavController, tipoCadastro: String) {
             ) {
                 Image(
                     imageVector = Icons.Default.ThumbUp,
+                    contentDescription = "Perfil",
+                    colorFilter = ColorFilter.tint(Color.White),
+                    modifier = Modifier.padding(start = 8.dp)
+                )
+            }
+        }
+
+        //Botão de consulta aos Mentores/Aprendizes
+
+        if (tipoCadastro == "Aprendiz") {
+            Botao(
+                onClick = {
+                    //TODO API para listar Mentores
+                },
+                texto = "Consultar Mentores",
+                cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.teal_700)),
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                enabled = true
+            ) {
+                Image(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = "Perfil",
+                    colorFilter = ColorFilter.tint(Color.White),
+                    modifier = Modifier.padding(start = 8.dp)
+                )
+            }
+        } else if (tipoCadastro == "Mentor") {
+            Botao(
+                onClick = {
+                    //TODO API para listar Aprendizes
+                },
+                texto = "Consultar Aprendizes",
+                cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.teal_700)),
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                enabled = true
+            ) {
+                Image(
+                    imageVector = Icons.Default.Search,
                     contentDescription = "Perfil",
                     colorFilter = ColorFilter.tint(Color.White),
                     modifier = Modifier.padding(start = 8.dp)
@@ -161,52 +194,6 @@ fun InicioScreen(navController: NavController, tipoCadastro: String) {
                     }
                 }
                 if (expandedSeach) {
-                    Text(
-                        text = "Grau de Instrução",
-                        modifier = Modifier.padding(start = 16.dp)
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    ExposedDropdownMenuBox(
-                        expanded = expandedDropdownGrau,
-                        onExpandedChange = { expandedDropdownGrau = it },
-                        modifier = Modifier
-                            .background(colorResource(id = R.color.cor_card))
-                            .padding(horizontal = 16.dp)
-                    ) {
-                        OutlinedTextField(
-                            value = grau,
-                            onValueChange = {},
-                            trailingIcon = {
-                                ExposedDropdownMenuDefaults
-                                    .TrailingIcon(expanded = expandedDropdownGrau)
-                            },
-                            modifier = Modifier
-                                .menuAnchor()
-                                .fillMaxWidth(),
-                            readOnly = true,
-                            colors = ExposedDropdownMenuDefaults.textFieldColors(),
-                            shape = RoundedCornerShape(16.dp)
-                        )
-                        ExposedDropdownMenu(
-                            expanded = expandedDropdownGrau,
-                            onDismissRequest = { expandedDropdownGrau = !expandedDropdownGrau },
-                            modifier = Modifier
-                                .background(Color.White)
-                        ) {
-                            listaGrau.forEach{
-                                DropdownMenuItem(
-                                    text = {
-                                        Text(text = it.grau)
-                                    },
-                                    onClick = {
-                                        grau = it.grau
-                                        expandedDropdownGrau = !expandedDropdownGrau
-                                    }
-                                )
-                            }
-                        }
-                    }
-                    Spacer(modifier = Modifier.height(16.dp))
                     if (tipoCadastro == "Aprendiz") {
                         Text(
                             text = "Habilidades",
@@ -249,10 +236,10 @@ fun InicioScreen(navController: NavController, tipoCadastro: String) {
                             listaHabilidade.forEach{
                                 DropdownMenuItem(
                                     text = {
-                                        Text(text = it.grau)
+                                        Text(text = it.area)
                                     },
                                     onClick = {
-                                        habilidades = it.grau
+                                        habilidades = it.area
                                         expandedDropdownHab = !expandedDropdownHab
                                     }
                                 )
@@ -261,7 +248,9 @@ fun InicioScreen(navController: NavController, tipoCadastro: String) {
                     }
                     Spacer(modifier = Modifier.height(16.dp))
                     Botao(
-                        onClick = { /*TODO Inserir API de pesquisa por Grau de Instrução e Habilidades*/ },
+                        onClick = {
+                            //TODO Inserir API de pesquisa por Grau de Instrução e Habilidades
+                        },
                         texto = "Filtrar",
                         cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.purple_700)),
                         modifier = Modifier.padding(start = 16.dp, bottom = 16.dp),
@@ -277,29 +266,9 @@ fun InicioScreen(navController: NavController, tipoCadastro: String) {
                 }
             }
         }
-        Spacer(modifier = Modifier.height(36.dp))
 
         // Cards dos Mentores/Aprendizes
 
-        if (tipoCadastro == "Aprendiz") {
-            Text(
-                text = "Mentores",
-                modifier = Modifier
-                    .fillMaxWidth(),
-                textAlign = TextAlign.Center,
-                fontSize = 36.sp,
-                fontWeight = FontWeight.Bold
-            )
-        } else if (tipoCadastro == "Mentor") {
-            Text(
-                text = "Aprendizes",
-                modifier = Modifier
-                    .fillMaxWidth(),
-                textAlign = TextAlign.Center,
-                fontSize = 36.sp,
-                fontWeight = FontWeight.Bold
-            )
-        }
         Spacer(modifier = Modifier.height(36.dp))
         if (tipoCadastro == "Aprendiz") {
             LazyRow(modifier = Modifier
@@ -468,5 +437,5 @@ fun CardAprendiz() {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun InicioPreview() {
-    InicioScreen(rememberNavController(), "Mentor")
+    InicioScreen(rememberNavController(), "Mentor", "")
 }

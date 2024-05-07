@@ -154,7 +154,7 @@ fun LoginScreen(navController: NavController) {
                                         val aprdz = response.body()
                                         if (aprdz!!.emailAprdz == email && aprdz!!.senhaAprdz == senha) {
                                             //Login bem sucedido
-                                            navController.navigate("inicio/$tipoCadastro")
+                                            navController.navigate("inicio/$tipoCadastro/${aprdz.emailAprdz}")
                                         } else {
                                             // Email ou senha incorretos
                                             Toast.makeText(context, "Email ou senha incorretos", Toast.LENGTH_LONG).show();
@@ -186,7 +186,7 @@ fun LoginScreen(navController: NavController) {
                                         val mentor = response.body()
                                         if (mentor!!.emailMentor == email && mentor!!.senhaMentor == senha) {
                                             //Login bem sucedido
-                                            navController.navigate("inicio/$tipoCadastro")
+                                            navController.navigate("inicio/$tipoCadastro/${mentor.emailMentor}")
                                         } else {
                                             // Email ou senha incorretos
                                             Toast.makeText(context, "Email ou senha incorretos", Toast.LENGTH_LONG).show();

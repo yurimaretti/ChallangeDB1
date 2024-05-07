@@ -54,70 +54,94 @@ class MainActivity : ComponentActivity() {
                         composable(route = "login") { LoginScreen(navController) }
                         composable(route = "cadastro") { CadastroScreen(navController) }
                         composable(
-                            route = "inicio/{tipoCadastro}",
+                            route = "inicio/{tipoCadastro}/{email}",
                             arguments = listOf(
                                 navArgument("tipoCadastro"){
+                                    type = NavType.StringType
+                                },
+                                navArgument("email"){
                                     type = NavType.StringType
                                 }
                             )
                         ) {
                             val tipoCadastro: String? = it.arguments?.getString("tipoCadastro")
-                            InicioScreen(navController, tipoCadastro!!)
+                            val email: String? = it.arguments?.getString("email")
+                            InicioScreen(navController, tipoCadastro!!, email!!)
                         }
                         composable(
-                            route = "editarPerfil/{tipoCadastro}",
+                            route = "editarPerfil/{tipoCadastro}/{email}",
                             arguments = listOf(
                                 navArgument("tipoCadastro"){
+                                    type = NavType.StringType
+                                },
+                                navArgument("email"){
                                     type = NavType.StringType
                                 }
                             )
                         ) {
                             val tipoCadastro: String? = it.arguments?.getString("tipoCadastro")
-                            EditarPerfilScreen(navController = navController, tipoCadastro!!)
+                            val email: String? = it.arguments?.getString("email")
+                            EditarPerfilScreen(navController = navController, tipoCadastro!!, email!!)
                         }
                         composable(
-                            route = "alterarSenha/{tipoCadastro}",
+                            route = "alterarSenha/{tipoCadastro}/{email}",
                             arguments = listOf(
                                 navArgument("tipoCadastro"){
+                                    type = NavType.StringType
+                                },
+                                navArgument("email"){
                                     type = NavType.StringType
                                 }
                             )
                         ) {
                             val tipoCadastro: String? = it.arguments?.getString("tipoCadastro")
-                            AlterarSenhaScreen(navController = navController, tipoCadastro!!)
+                            val email: String? = it.arguments?.getString("email")
+                            AlterarSenhaScreen(navController = navController, tipoCadastro!!, email!!)
                         }
                         composable(
-                            route = "formacao/{tipoCadastro}",
+                            route = "formacao/{tipoCadastro}/{email}",
                             arguments = listOf(
                                 navArgument("tipoCadastro"){
+                                    type = NavType.StringType
+                                },
+                                navArgument("email"){
                                     type = NavType.StringType
                                 }
                             )
                         ) {
                             val tipoCadastro: String? = it.arguments?.getString("tipoCadastro")
-                            FormacaoScreen(navController = navController, tipoCadastro!!)
+                            val email: String? = it.arguments?.getString("email")
+                            FormacaoScreen(navController = navController, tipoCadastro!!, email!!)
                         }
                         composable(
-                            route = "match/{tipoCadastro}",
+                            route = "match/{tipoCadastro}/{email}",
                             arguments = listOf(
                                 navArgument("tipoCadastro"){
+                                    type = NavType.StringType
+                                },
+                                navArgument("email"){
                                     type = NavType.StringType
                                 }
                             )
                         ) {
                             val tipoCadastro: String? = it.arguments?.getString("tipoCadastro")
-                            MatchScreen(navController = navController, tipoCadastro!!)
+                            val email: String? = it.arguments?.getString("email")
+                            MatchScreen(navController = navController, tipoCadastro!!, email!!)
                         }
                         composable(
-                            route = "interesses/{tipoCadastro}",
+                            route = "interesses/{tipoCadastro}/{email}",
                             arguments = listOf(
                                 navArgument("tipoCadastro"){
+                                    type = NavType.StringType
+                                },
+                                navArgument("email"){
                                     type = NavType.StringType
                                 }
                             )
                         ) {
                             val tipoCadastro: String? = it.arguments?.getString("tipoCadastro")
-                            InteressesScreen(navController = navController, tipoCadastro!!)
+                            val email: String? = it.arguments?.getString("email")
+                            InteressesScreen(navController = navController, tipoCadastro!!, email!!)
                         }
                     }
                 }
