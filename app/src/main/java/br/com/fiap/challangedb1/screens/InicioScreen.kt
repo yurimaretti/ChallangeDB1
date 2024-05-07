@@ -1,5 +1,7 @@
 package br.com.fiap.challangedb1.screens
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.LinearOutSlowInEasing
@@ -17,6 +19,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
@@ -44,6 +47,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -59,6 +63,12 @@ import br.com.fiap.challangedb1.components.CardTemplate
 import br.com.fiap.challangedb1.components.TemplateScreen
 import br.com.fiap.challangedb1.enums.AreaConhecimento
 import br.com.fiap.challangedb1.enums.GrauInstrucao
+import br.com.fiap.challangedb1.model.AprendizModel
+import br.com.fiap.challangedb1.model.MentorModel
+import br.com.fiap.challangedb1.service.RetrofitInstance
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -74,6 +84,14 @@ fun InicioScreen(navController: NavController, tipoCadastro: String, email: Stri
         mutableStateOf("")
     }
     val listaHabilidade = AreaConhecimento.entries
+    val context = LocalContext.current
+    val apiService = RetrofitInstance.apiService
+    var mentores by remember {
+        mutableStateOf(listOf<MentorModel>())
+    }
+    var aprendizes by remember {
+        mutableStateOf(listOf<AprendizModel>())
+    }
 
     TemplateScreen(nomeTela = "Bem vindo $tipoCadastro!") {
 
@@ -120,11 +138,23 @@ fun InicioScreen(navController: NavController, tipoCadastro: String, email: Stri
         if (tipoCadastro == "Aprendiz") {
             Botao(
                 onClick = {
-                    //TODO API para listar Mentores
+                    val call = apiService.getMentor()
+
+                    call.enqueue(object : Callback<List<MentorModel>> {
+                        override fun onResponse(call: Call<List<MentorModel>>, response: Response<List<MentorModel>>) {
+                            mentores = response.body()!!
+                        }
+                        override fun onFailure(call: Call<List<MentorModel>>, t: Throwable) {
+                            Toast.makeText(context, "Por favor tente novamente mais tarde.", Toast.LENGTH_LONG).show();
+                            Log.e("TAG", "Erro na chamada à API: ${t.message}")
+                        }
+                    })
                 },
                 texto = "Consultar Mentores",
                 cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.teal_700)),
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
                 enabled = true
             ) {
                 Image(
@@ -137,11 +167,23 @@ fun InicioScreen(navController: NavController, tipoCadastro: String, email: Stri
         } else if (tipoCadastro == "Mentor") {
             Botao(
                 onClick = {
-                    //TODO API para listar Aprendizes
+                    val call = apiService.getAprendiz()
+
+                    call.enqueue(object : Callback<List<AprendizModel>> {
+                        override fun onResponse(call: Call<List<AprendizModel>>, response: Response<List<AprendizModel>>) {
+                            aprendizes = response.body()!!
+                        }
+                        override fun onFailure(call: Call<List<AprendizModel>>, t: Throwable) {
+                            Toast.makeText(context, "Por favor tente novamente mais tarde.", Toast.LENGTH_LONG).show();
+                            Log.e("TAG", "Erro na chamada à API: ${t.message}")
+                        }
+                    })
                 },
                 texto = "Consultar Aprendizes",
                 cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.teal_700)),
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
                 enabled = true
             ) {
                 Image(
@@ -249,7 +291,7 @@ fun InicioScreen(navController: NavController, tipoCadastro: String, email: Stri
                     Spacer(modifier = Modifier.height(16.dp))
                     Botao(
                         onClick = {
-                            //TODO Inserir API de pesquisa por Grau de Instrução e Habilidades
+                            //TODO Inserir API de pesquisa por Habilidades
                         },
                         texto = "Filtrar",
                         cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.purple_700)),
@@ -271,27 +313,21 @@ fun InicioScreen(navController: NavController, tipoCadastro: String, email: Stri
 
         Spacer(modifier = Modifier.height(36.dp))
         if (tipoCadastro == "Aprendiz") {
-            LazyRow(modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp)){
-                item {
-                    CardMentor()
-                    CardMentor()
-                    CardMentor()
-                    CardMentor()
-                    CardMentor()
+            LazyRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp)
+            ){
+                items(mentores) {
+                    CardMentor(it)
                 }
             }
         } else if (tipoCadastro == "Mentor") {
             LazyRow(modifier = Modifier
                 .fillMaxWidth()
                 .padding(12.dp)){
-                item {
-                    CardAprendiz()
-                    CardAprendiz()
-                    CardAprendiz()
-                    CardAprendiz()
-                    CardAprendiz()
+                items(aprendizes) {
+                    CardAprendiz(it)
                 }
             }
         }
@@ -301,7 +337,7 @@ fun InicioScreen(navController: NavController, tipoCadastro: String, email: Stri
 //Templates dos cards de Mentor e Aprendiz
 
 @Composable
-fun CardMentor() {
+fun CardMentor(mentor: MentorModel) {
     CardTemplate() {
         Column(
             modifier = Modifier
@@ -310,7 +346,7 @@ fun CardMentor() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Yuri Maretti Cornacioni",
+                text = mentor.nomeMentor,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -325,7 +361,7 @@ fun CardMentor() {
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(bottom = 12.dp)
                         )
-                        Text(text = "Masculino", modifier = Modifier.padding(bottom = 12.dp))
+                        Text(text = mentor.generoMentor, modifier = Modifier.padding(bottom = 12.dp))
                     }
                     Column() {
                         Text(
@@ -368,7 +404,7 @@ fun CardMentor() {
 }
 
 @Composable
-fun CardAprendiz() {
+fun CardAprendiz(aprendiz: AprendizModel) {
     CardTemplate() {
         Column(
             modifier = Modifier
@@ -377,7 +413,7 @@ fun CardAprendiz() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Bruna Letícia Martins da Silva",
+                text = aprendiz.nomeAprdz,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -392,7 +428,7 @@ fun CardAprendiz() {
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(bottom = 12.dp)
                         )
-                        Text(text = "Feminino", modifier = Modifier.padding(bottom = 12.dp))
+                        Text(text = aprendiz.generoAprdz, modifier = Modifier.padding(bottom = 12.dp))
                     }
                     Column() {
                         Text(

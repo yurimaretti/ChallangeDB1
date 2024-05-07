@@ -15,6 +15,9 @@ interface ApiService {
     @POST("/api/Aprendiz")
     fun incluirAprdz(@Body dados: AprendizModel): Call<AprendizModel>
 
+    @GET("/api/Aprendiz")
+    fun getAprendiz(): Call<List<AprendizModel>>
+
     @GET("/api/Aprendiz/{emailAprendiz}")
     fun getAprendizPorEmail(@Path("emailAprendiz") emailAprendiz: String): Call<AprendizModel>
 
@@ -22,6 +25,9 @@ interface ApiService {
 
     @POST("/api/Mentor")
     fun incluirMentor(@Body dados: MentorModel): Call<MentorModel>
+
+    @GET("/api/Mentor")
+    fun getMentor(): Call<List<MentorModel>>
 
     @GET("/api/Mentor/{emailMentor}")
     fun getMentorPorEmail(@Path("emailMentor") emailMentor: String): Call<MentorModel>
