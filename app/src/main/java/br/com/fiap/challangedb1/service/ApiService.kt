@@ -4,7 +4,9 @@ import br.com.fiap.challangedb1.model.AprendizModel
 import br.com.fiap.challangedb1.model.MentorModel
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 interface ApiService {
 
@@ -13,8 +15,14 @@ interface ApiService {
     @POST("/api/Aprendiz")
     fun incluirAprdz(@Body dados: AprendizModel): Call<AprendizModel>
 
+    @GET("/api/Aprendiz/{emailAprendiz}")
+    fun getAprendizPorEmail(@Path("emailAprendiz") emailAprendiz: String): Call<AprendizModel>
+
 //Endpoints para a tabela Mentor - T_DB1_MENTOR
 
     @POST("/api/Mentor")
     fun incluirMentor(@Body dados: MentorModel): Call<MentorModel>
+
+    @GET("/api/Mentor/{emailMentor}")
+    fun getMentorPorEmail(@Path("emailMentor") emailMentor: String): Call<MentorModel>
 }
