@@ -306,6 +306,8 @@ fun CadastroScreen(navController: NavController) {
                                             Toast.makeText(context, "Usuário adicionado!", Toast.LENGTH_LONG).show();
                                             navController.navigate("login")
                                         } else {
+                                            val errorBody = response.errorBody()?.string()
+                                            Log.e("TAG", "Erro na chamada à API: $errorBody")
                                             Toast.makeText(context, "Ops, algo deu errado... Pode tentar de novo?", Toast.LENGTH_LONG).show();
                                         }
                                     }
@@ -331,6 +333,8 @@ fun CadastroScreen(navController: NavController) {
                                             Toast.makeText(context, "Usuário adicionado!", Toast.LENGTH_LONG).show();
                                             navController.navigate("login")
                                         } else {
+                                            val errorBody = response.errorBody()?.string()
+                                            Log.e("TAG", "Erro na chamada à API: $errorBody")
                                             Toast.makeText(context, "Ops, algo deu errado... Pode tentar de novo?", Toast.LENGTH_LONG).show();
                                         }
                                     }

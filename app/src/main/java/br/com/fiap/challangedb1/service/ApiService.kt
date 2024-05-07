@@ -8,13 +8,13 @@ import retrofit2.http.POST
 
 interface ApiService {
 
-    //APIs para cadastro do Aprendiz
+//Endpoints para a tabela Aprendiz - T_DB1_APRENDIZ
 
-    @POST("/api/v1/cadastroAprdz")
+    @POST("/api/Aprendiz")
     fun incluirAprdz(@Body dados: AprendizModel): Call<AprendizModel>
 
-    //APIs para cadastro do Mentor
+//Endpoints para a tabela Mentor - T_DB1_MENTOR
 
-    @POST("/api/v1/cadastroMentor")
+    @POST("/api/Mentor")
     fun incluirMentor(@Body dados: MentorModel): Call<MentorModel>
 }
