@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
@@ -272,7 +273,7 @@ fun EditarPerfilScreen(navController: NavController, tipoCadastro: String, email
             if (tipoCadastro == "Aprendiz") {
                 Botao(
                     onClick = { navController.navigate("interesses/$tipoCadastro/$email") },
-                    texto = "Incluir Interesses",
+                    texto = "Editar Interesses",
                     cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.black)),
                     modifier = Modifier.fillMaxWidth(),
                     enabled = true
@@ -287,7 +288,7 @@ fun EditarPerfilScreen(navController: NavController, tipoCadastro: String, email
             } else if (tipoCadastro == "Mentor") {
                 Botao(
                     onClick = { navController.navigate("interesses/$tipoCadastro/$email") },
-                    texto = "Incluir Habilidades",
+                    texto = "Editar Habilidades",
                     cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.black)),
                     modifier = Modifier.fillMaxWidth(),
                     enabled = true
@@ -305,14 +306,14 @@ fun EditarPerfilScreen(navController: NavController, tipoCadastro: String, email
 
             Spacer(modifier = Modifier.height(16.dp))
             Botao(
-                onClick = { navController.navigate("formacao/$tipoCadastro/$email") },
-                texto = "Incluir Formação",
+                onClick = { navController.navigate("editarFormacao/$tipoCadastro/$email") },
+                texto = "Editar Formação",
                 cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.black)),
                 modifier = Modifier.fillMaxWidth(),
                 enabled = true
             ) {
                 Image(
-                    imageVector = Icons.Default.Info,
+                    imageVector = Icons.Default.Create,
                     contentDescription = "Formação",
                     colorFilter = ColorFilter.tint(Color.White),
                     modifier = Modifier.padding(start = 8.dp)
@@ -330,7 +331,7 @@ fun EditarPerfilScreen(navController: NavController, tipoCadastro: String, email
                 enabled = true
             ) {
                 Image(
-                    imageVector = Icons.Default.Edit,
+                    imageVector = Icons.Default.Lock,
                     contentDescription = "Senha",
                     colorFilter = ColorFilter.tint(Color.White),
                     modifier = Modifier.padding(start = 8.dp)

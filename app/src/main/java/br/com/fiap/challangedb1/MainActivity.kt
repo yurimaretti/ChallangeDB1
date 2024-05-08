@@ -16,8 +16,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import br.com.fiap.challangedb1.screens.AlterarSenhaScreen
 import br.com.fiap.challangedb1.screens.CadastroScreen
+import br.com.fiap.challangedb1.screens.EditarFormacaoScreen
 import br.com.fiap.challangedb1.screens.EditarPerfilScreen
-import br.com.fiap.challangedb1.screens.FormacaoScreen
+import br.com.fiap.challangedb1.screens.IncluirFormacaoScreen
 import br.com.fiap.challangedb1.screens.InicioScreen
 import br.com.fiap.challangedb1.screens.InteressesScreen
 import br.com.fiap.challangedb1.screens.LoginScreen
@@ -99,6 +100,21 @@ class MainActivity : ComponentActivity() {
                             AlterarSenhaScreen(navController = navController, tipoCadastro!!, email!!)
                         }
                         composable(
+                            route = "editarFormacao/{tipoCadastro}/{email}",
+                            arguments = listOf(
+                                navArgument("tipoCadastro"){
+                                    type = NavType.StringType
+                                },
+                                navArgument("email"){
+                                    type = NavType.StringType
+                                }
+                            )
+                        ) {
+                            val tipoCadastro: String? = it.arguments?.getString("tipoCadastro")
+                            val email: String? = it.arguments?.getString("email")
+                            EditarFormacaoScreen(navController = navController, tipoCadastro!!, email!!)
+                        }
+                        composable(
                             route = "formacao/{tipoCadastro}/{email}",
                             arguments = listOf(
                                 navArgument("tipoCadastro"){
@@ -111,7 +127,7 @@ class MainActivity : ComponentActivity() {
                         ) {
                             val tipoCadastro: String? = it.arguments?.getString("tipoCadastro")
                             val email: String? = it.arguments?.getString("email")
-                            FormacaoScreen(navController = navController, tipoCadastro!!, email!!)
+                            IncluirFormacaoScreen(navController = navController, tipoCadastro!!, email!!)
                         }
                         composable(
                             route = "match/{tipoCadastro}/{email}",

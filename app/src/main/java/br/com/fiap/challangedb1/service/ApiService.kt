@@ -1,9 +1,12 @@
 package br.com.fiap.challangedb1.service
 
 import br.com.fiap.challangedb1.model.AprendizModel
+import br.com.fiap.challangedb1.model.FormAprdzModel
+import br.com.fiap.challangedb1.model.FormMentorModel
 import br.com.fiap.challangedb1.model.MentorModel
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -38,4 +41,26 @@ interface ApiService {
 
     @PUT("/api/Mentor/{emailMentor}")
     fun atualizarMentor(@Path("emailMentor") emailMentor: String, @Body dados: MentorModel): Call<MentorModel>
+
+//Endpoints para a tabela Formação Aprendiz - T_DB1_FORM_APRDZ
+
+    @POST("/api/FormacaoAprendiz")
+    fun incluirFormAprdz(@Body dados: FormAprdzModel): Call<FormAprdzModel>
+
+    @GET("/api/FormacaoAprendiz/{emailAprendiz}")
+    fun getFormAprdzPorEmail(@Path("emailAprendiz") emailAprendiz: String): Call<List<FormAprdzModel>>
+
+    @DELETE("/api/FormacaoAprendiz/{id}")
+    fun excluirFormAprdz(@Path("id") id: Int): Call<Void>
+
+//Endpoints para a tabela Formação Mentor - T_DB1_FORM_MENTOR
+
+    @POST("/api/FormacaoMentor")
+    fun incluirFormMentor(@Body dados: FormMentorModel): Call<FormMentorModel>
+
+    @GET("/api/FormacaoMentor/{emailMentor}")
+    fun getFormMentorPorEmail(@Path("emailMentor") emailAprendiz: String): Call<List<FormMentorModel>>
+
+    @DELETE("/api/FormacaoMentor/{id}")
+    fun excluirFormMentor(@Path("id") id: Int): Call<Void>
 }

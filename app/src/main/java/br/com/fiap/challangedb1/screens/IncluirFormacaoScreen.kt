@@ -1,5 +1,7 @@
 package br.com.fiap.challangedb1.screens
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -41,14 +44,19 @@ import br.com.fiap.challangedb1.components.InputBox
 import br.com.fiap.challangedb1.components.MensagemErro
 import br.com.fiap.challangedb1.components.TemplateScreen
 import br.com.fiap.challangedb1.enums.GrauInstrucao
+import br.com.fiap.challangedb1.model.AprendizModel
+import br.com.fiap.challangedb1.model.FormAprdzModel
+import br.com.fiap.challangedb1.model.FormMentorModel
+import br.com.fiap.challangedb1.service.RetrofitInstance
 import br.com.fiap.challangedb1.util.validation.validacaoDropdown
-import br.com.fiap.challangedb1.util.validation.validacaoEmail
 import br.com.fiap.challangedb1.util.validation.validacaoNome
-import br.com.fiap.challangedb1.util.validation.validacaoSenha
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FormacaoScreen(navController: NavController, tipoCadastro: String, email: String) {
+fun IncluirFormacaoScreen(navController: NavController, tipoCadastro: String, email: String) {
 
     TemplateScreen(nomeTela = "Formação $tipoCadastro") {
 
@@ -68,6 +76,10 @@ fun FormacaoScreen(navController: NavController, tipoCadastro: String, email: St
         var erroCadastro by remember {
             mutableStateOf(false)
         }
+        val apiService = RetrofitInstance.apiService
+        val context = LocalContext.current
+        val formacaoAprendiz = FormAprdzModel(0, grau, curso, instituicao, email)
+        val formacaoMentor = FormMentorModel(0, grau, curso, instituicao, email)
 
         CardTemplate {
             Text(text = "Incluir Formação",
@@ -191,7 +203,7 @@ fun FormacaoScreen(navController: NavController, tipoCadastro: String, email: St
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Botao(
-                    onClick = { navController.navigate("editarPerfil/$tipoCadastro/$email") },
+                    onClick = { navController.navigate("editarFormacao/$tipoCadastro/$email") },
                     texto = "Cancelar",
                     modifier = Modifier
                         .padding(horizontal = 24.dp)
@@ -207,8 +219,23 @@ fun FormacaoScreen(navController: NavController, tipoCadastro: String, email: St
                                 validacaoNome(curso) &&
                                 validacaoDropdown(grau)
                             ) {
-                                //TODO API para salvar na tabela de aprendiz
-                                navController.navigate("editarPerfil/$tipoCadastro/$email")
+                                val call = apiService.incluirFormAprdz(formacaoAprendiz)
+
+                                call.enqueue(object : Callback<FormAprdzModel> {
+                                    override fun onResponse(call: Call<FormAprdzModel>, response: Response<FormAprdzModel>) {
+                                        if (response.isSuccessful) {
+                                            Toast.makeText(context, "Formação adicionada!", Toast.LENGTH_LONG).show();
+                                            navController.navigate("editarFormacao/$tipoCadastro/$email")
+                                        } else {
+                                            val errorBody = response.errorBody()?.string()
+                                            Log.e("TAG", "Erro na chamada à API: $errorBody")
+                                            Toast.makeText(context, "Ops, algo deu errado... Pode tentar de novo?", Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                    override fun onFailure(call: Call<FormAprdzModel>, t: Throwable) {
+                                        Log.e("TAG", "Erro na chamada à API: ${t.message}")
+                                    }
+                                })
                             } else {
                                 erroCadastro = true
                             }
@@ -217,8 +244,23 @@ fun FormacaoScreen(navController: NavController, tipoCadastro: String, email: St
                                 validacaoNome(curso) &&
                                 validacaoDropdown(grau)
                             ) {
-                                //TODO API para salvar na tabela de mentor
-                                navController.navigate("editarPerfil/$tipoCadastro/$email")
+                                val call = apiService.incluirFormMentor(formacaoMentor)
+
+                                call.enqueue(object : Callback<FormMentorModel> {
+                                    override fun onResponse(call: Call<FormMentorModel>, response: Response<FormMentorModel>) {
+                                        if (response.isSuccessful) {
+                                            Toast.makeText(context, "Formação adicionada!", Toast.LENGTH_LONG).show();
+                                            navController.navigate("editarFormacao/$tipoCadastro/$email")
+                                        } else {
+                                            val errorBody = response.errorBody()?.string()
+                                            Log.e("TAG", "Erro na chamada à API: $errorBody")
+                                            Toast.makeText(context, "Ops, algo deu errado... Pode tentar de novo?", Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                    override fun onFailure(call: Call<FormMentorModel>, t: Throwable) {
+                                        Log.e("TAG", "Erro na chamada à API: ${t.message}")
+                                    }
+                                })
                             } else {
                                 erroCadastro = true
                             }
@@ -251,6 +293,6 @@ fun FormacaoScreen(navController: NavController, tipoCadastro: String, email: St
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun FormacaoAprdzScreenPreview() {
-    FormacaoScreen(rememberNavController(), "Mentor", "")
+fun IncluirFormacaoAprdzScreenPreview() {
+    IncluirFormacaoScreen(rememberNavController(), "Mentor", "")
 }
