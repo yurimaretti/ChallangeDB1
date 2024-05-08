@@ -6,6 +6,7 @@ import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface ApiService {
@@ -21,6 +22,9 @@ interface ApiService {
     @GET("/api/Aprendiz/{emailAprendiz}")
     fun getAprendizPorEmail(@Path("emailAprendiz") emailAprendiz: String): Call<AprendizModel>
 
+    @PUT("/api/Aprendiz/{emailAprendiz}")
+    fun atualizarAprdz(@Path("emailAprendiz") emailAprendiz: String, @Body dados: AprendizModel): Call<AprendizModel>
+
 //Endpoints para a tabela Mentor - T_DB1_MENTOR
 
     @POST("/api/Mentor")
@@ -31,4 +35,7 @@ interface ApiService {
 
     @GET("/api/Mentor/{emailMentor}")
     fun getMentorPorEmail(@Path("emailMentor") emailMentor: String): Call<MentorModel>
+
+    @PUT("/api/Mentor/{emailMentor}")
+    fun atualizarMentor(@Path("emailMentor") emailMentor: String, @Body dados: MentorModel): Call<MentorModel>
 }

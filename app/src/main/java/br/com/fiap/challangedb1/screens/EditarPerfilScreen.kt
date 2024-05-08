@@ -1,5 +1,7 @@
 package br.com.fiap.challangedb1.screens
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -16,6 +18,7 @@ import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
@@ -34,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -51,8 +55,14 @@ import br.com.fiap.challangedb1.components.InputBox
 import br.com.fiap.challangedb1.components.MensagemErro
 import br.com.fiap.challangedb1.components.TemplateScreen
 import br.com.fiap.challangedb1.enums.Generos
+import br.com.fiap.challangedb1.model.AprendizModel
+import br.com.fiap.challangedb1.model.MentorModel
+import br.com.fiap.challangedb1.service.RetrofitInstance
 import br.com.fiap.challangedb1.util.validation.validacaoDropdown
 import br.com.fiap.challangedb1.util.validation.validacaoNome
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -66,6 +76,9 @@ fun EditarPerfilScreen(navController: NavController, tipoCadastro: String, email
         var genero by remember {
             mutableStateOf("")
         }
+        var senha by remember {
+            mutableStateOf("")
+        }
         var isExpanded by remember {
             mutableStateOf(false)
         }
@@ -73,16 +86,101 @@ fun EditarPerfilScreen(navController: NavController, tipoCadastro: String, email
         var erroCadastro by remember {
             mutableStateOf(false)
         }
+        val context = LocalContext.current
+        val apiService = RetrofitInstance.apiService
+        var aprendiz by remember {
+            mutableStateOf(AprendizModel(email, nome, genero, senha))
+        }
+        var mentor by remember {
+            mutableStateOf(MentorModel(email, nome, genero, senha))
+        }
+        var aprendizAtualizado = AprendizModel(email, nome, genero, senha)
+        var mentorAtualizado = MentorModel(email, nome, genero, senha)
 
         CardTemplate {
-            Text(text = "Editar",
-                modifier = Modifier
-                    .fillMaxWidth(),
-                textAlign = TextAlign.Center,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(modifier = Modifier.height(16.dp))
+            //Botão de consulta aos Mentores/Aprendizes
+
+            if (tipoCadastro == "Aprendiz") {
+                Botao(
+                    onClick = {
+                        val call = apiService.getAprendizPorEmail(email)
+
+                        call.enqueue(object : Callback<AprendizModel> {
+                            override fun onResponse(call: Call<AprendizModel>, response: Response<AprendizModel>) {
+                                if (response.isSuccessful) {
+                                    aprendiz = response.body()!!
+                                    aprendiz?.let { aprendiz ->
+                                        nome = aprendiz.nomeAprdz
+                                        genero = aprendiz.generoAprdz
+                                        senha = aprendiz.senhaAprdz
+                                    };
+                                } else {
+                                    val errorBody = response.errorBody()?.string()
+                                    Toast.makeText(context, "Por favor tente novamente mais tarde.", Toast.LENGTH_LONG).show();
+                                    Log.e("TAG", "Erro na chamada à API: $errorBody")
+                                }
+                            }
+                            override fun onFailure(call: Call<AprendizModel>, t: Throwable) {
+                                Toast.makeText(context, "Por favor tente novamente mais tarde.", Toast.LENGTH_LONG).show();
+                                Log.e("TAG", "Erro na chamada à API: ${t.message}")
+                            }
+                        })
+                    },
+                    texto = "Consultar dados para edição",
+                    cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.teal_700)),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    enabled = true
+                ) {
+                    Image(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = "Perfil",
+                        colorFilter = ColorFilter.tint(Color.White),
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+                }
+            } else if (tipoCadastro == "Mentor") {
+                Botao(
+                    onClick = {
+                        val call = apiService.getMentorPorEmail(email)
+
+                        call.enqueue(object : Callback<MentorModel> {
+                            override fun onResponse(call: Call<MentorModel>, response: Response<MentorModel>) {
+                                if (response.isSuccessful) {
+                                    mentor = response.body()!!
+                                    mentor?.let { mentor ->
+                                        nome = mentor.nomeMentor
+                                        genero = mentor.generoMentor
+                                        senha = mentor.senhaMentor
+                                    };
+                                } else {
+                                    val errorBody = response.errorBody()?.string()
+                                    Toast.makeText(context, "Por favor tente novamente mais tarde.", Toast.LENGTH_LONG).show();
+                                    Log.e("TAG", "Erro na chamada à API: $errorBody")
+                                }
+                            }
+                            override fun onFailure(call: Call<MentorModel>, t: Throwable) {
+                                Toast.makeText(context, "Por favor tente novamente mais tarde.", Toast.LENGTH_LONG).show();
+                                Log.e("TAG", "Erro na chamada à API: ${t.message}")
+                            }
+                        })
+                    },
+                    texto = "Consultar dados para edição",
+                    cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.teal_700)),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    enabled = true
+                ) {
+                    Image(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = "Perfil",
+                        colorFilter = ColorFilter.tint(Color.White),
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+                }
+            }
 
             //Formulário
 
@@ -262,8 +360,25 @@ fun EditarPerfilScreen(navController: NavController, tipoCadastro: String, email
                             if (validacaoNome(nome) &&
                                 validacaoDropdown(genero)
                             ) {
-                                //TODO API para salvar na tabela de aprendiz
-                                navController.navigate("inicio/$tipoCadastro/$email")
+                                aprendizAtualizado = AprendizModel(email, nome, genero, senha)
+
+                                val call = apiService.atualizarAprdz(email, aprendizAtualizado)
+                                call.enqueue(object : Callback<AprendizModel> {
+                                    override fun onResponse(call: Call<AprendizModel>, response: Response<AprendizModel>) {
+                                        if (response.isSuccessful) {
+                                            Toast.makeText(context, "Dados atualizados!", Toast.LENGTH_LONG).show();
+                                            navController.navigate("inicio/$tipoCadastro/$email")
+                                        } else {
+                                            val errorBody = response.errorBody()?.string()
+                                            Log.e("TAG", "Erro na chamada à API: $errorBody")
+                                            Toast.makeText(context, "Ops, algo deu errado... Pode tentar de novo?", Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+
+                                    override fun onFailure(call: Call<AprendizModel>, t: Throwable) {
+                                        Log.e("TAG", "Erro na chamada à API: ${t.message}")
+                                    }
+                                })
                             } else {
                                 erroCadastro = true
                             }
@@ -271,8 +386,25 @@ fun EditarPerfilScreen(navController: NavController, tipoCadastro: String, email
                             if (validacaoNome(nome) &&
                                 validacaoDropdown(genero)
                             ) {
-                                //TODO API para salvar na tabela de mentor
-                                navController.navigate("inicio/$tipoCadastro/$email")
+                                mentorAtualizado = MentorModel(email, nome, genero, senha)
+
+                                val call = apiService.atualizarMentor(email, mentorAtualizado)
+                                call.enqueue(object : Callback<MentorModel> {
+                                    override fun onResponse(call: Call<MentorModel>, response: Response<MentorModel>) {
+                                        if (response.isSuccessful) {
+                                            Toast.makeText(context, "Dados atualizados!", Toast.LENGTH_LONG).show();
+                                            navController.navigate("inicio/$tipoCadastro/$email")
+                                        } else {
+                                            val errorBody = response.errorBody()?.string()
+                                            Log.e("TAG", "Erro na chamada à API: $errorBody")
+                                            Toast.makeText(context, "Ops, algo deu errado... Pode tentar de novo?", Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+
+                                    override fun onFailure(call: Call<MentorModel>, t: Throwable) {
+                                        Log.e("TAG", "Erro na chamada à API: ${t.message}")
+                                    }
+                                })
                             } else {
                                 erroCadastro = true
                             }
@@ -306,5 +438,5 @@ fun EditarPerfilScreen(navController: NavController, tipoCadastro: String, email
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun EditarPerfilAprdzPreview() {
-    EditarPerfilScreen(rememberNavController(), "Aprendiz", "")
+    EditarPerfilScreen(rememberNavController(), "Mentor", "")
 }

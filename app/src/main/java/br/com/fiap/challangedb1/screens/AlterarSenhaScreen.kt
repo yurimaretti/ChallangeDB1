@@ -1,5 +1,7 @@
 package br.com.fiap.challangedb1.screens
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,6 +18,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -32,16 +35,28 @@ import br.com.fiap.challangedb1.components.CardTemplate
 import br.com.fiap.challangedb1.components.InputBox
 import br.com.fiap.challangedb1.components.MensagemErro
 import br.com.fiap.challangedb1.components.TemplateScreen
+import br.com.fiap.challangedb1.model.AprendizModel
+import br.com.fiap.challangedb1.model.MentorModel
+import br.com.fiap.challangedb1.service.RetrofitInstance
 import br.com.fiap.challangedb1.util.validation.validacaoDropdown
 import br.com.fiap.challangedb1.util.validation.validacaoEmail
 import br.com.fiap.challangedb1.util.validation.validacaoNome
 import br.com.fiap.challangedb1.util.validation.validacaoSenha
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 @Composable
 fun AlterarSenhaScreen(navController: NavController, tipoCadastro: String, email: String) {
 
     TemplateScreen(nomeTela = "Alterar Senha $tipoCadastro") {
 
+        var nome by remember {
+            mutableStateOf("")
+        }
+        var genero by remember {
+            mutableStateOf("")
+        }
         var senha1 by remember {
             mutableStateOf("")
         }
@@ -51,6 +66,16 @@ fun AlterarSenhaScreen(navController: NavController, tipoCadastro: String, email
         var erroCadastro by remember {
             mutableStateOf(false)
         }
+        val context = LocalContext.current
+        val apiService = RetrofitInstance.apiService
+        var aprendiz by remember {
+            mutableStateOf(AprendizModel(email, nome, genero, senha1))
+        }
+        var mentor by remember {
+            mutableStateOf(MentorModel(email, nome, genero, senha1))
+        }
+        var aprendizAtualizado = AprendizModel(email, nome, genero, senha1)
+        var mentorAtualizado = MentorModel(email, nome, genero, senha1)
 
         CardTemplate {
             Text(text = "Alteração de Senha",
@@ -135,8 +160,46 @@ fun AlterarSenhaScreen(navController: NavController, tipoCadastro: String, email
                             if (validacaoSenha(senha1) &&
                                 senha1 == senha2
                             ) {
-                                //TODO API para salvar na tabela de aprendiz
-                                navController.navigate("editarPerfil/$tipoCadastro/$email")
+                                val call = apiService.getAprendizPorEmail(email)
+
+                                call.enqueue(object : Callback<AprendizModel> {
+                                    override fun onResponse(call: Call<AprendizModel>, response: Response<AprendizModel>) {
+                                        if (response.isSuccessful) {
+                                            aprendiz = response.body()!!
+                                            aprendiz?.let { aprendiz ->
+                                                nome = aprendiz.nomeAprdz
+                                                genero = aprendiz.generoAprdz
+                                            };
+                                            aprendizAtualizado = AprendizModel(email, nome, genero, senha1)
+
+                                            val callUpdate = apiService.atualizarAprdz(email, aprendizAtualizado)
+                                            callUpdate.enqueue(object : Callback<AprendizModel> {
+                                                override fun onResponse(callUpdate: Call<AprendizModel>, response: Response<AprendizModel>) {
+                                                    if (response.isSuccessful) {
+                                                        Toast.makeText(context, "Dados atualizados!", Toast.LENGTH_LONG).show();
+                                                        navController.navigate("editarPerfil/$tipoCadastro/$email")
+                                                    } else {
+                                                        val errorBody = response.errorBody()?.string()
+                                                        Log.e("TAG", "Erro na chamada à API: $errorBody")
+                                                        Toast.makeText(context, "Ops, algo deu errado... Pode tentar de novo?", Toast.LENGTH_LONG).show();
+                                                    }
+                                                }
+
+                                                override fun onFailure(call: Call<AprendizModel>, t: Throwable) {
+                                                    Log.e("TAG", "Erro na chamada à API: ${t.message}")
+                                                }
+                                            })
+                                        } else {
+                                            val errorBody = response.errorBody()?.string()
+                                            Toast.makeText(context, "Por favor tente novamente mais tarde.", Toast.LENGTH_LONG).show();
+                                            Log.e("TAG", "Erro na chamada à API: $errorBody")
+                                        }
+                                    }
+                                    override fun onFailure(call: Call<AprendizModel>, t: Throwable) {
+                                        Toast.makeText(context, "Por favor tente novamente mais tarde.", Toast.LENGTH_LONG).show();
+                                        Log.e("TAG", "Erro na chamada à API: ${t.message}")
+                                    }
+                                })
                             } else {
                                 erroCadastro = true
                             }
@@ -144,8 +207,46 @@ fun AlterarSenhaScreen(navController: NavController, tipoCadastro: String, email
                             if (validacaoSenha(senha1) &&
                                 senha1 == senha2
                             ) {
-                                //TODO API para salvar na tabela de mentor
-                                navController.navigate("editarPerfil/$tipoCadastro/$email")
+                                val call = apiService.getMentorPorEmail(email)
+
+                                call.enqueue(object : Callback<MentorModel> {
+                                    override fun onResponse(call: Call<MentorModel>, response: Response<MentorModel>) {
+                                        if (response.isSuccessful) {
+                                            mentor = response.body()!!
+                                            mentor?.let { mentor ->
+                                                nome = mentor.nomeMentor
+                                                genero = mentor.generoMentor
+                                            };
+                                            mentorAtualizado = MentorModel(email, nome, genero, senha1)
+
+                                            val callUpdate = apiService.atualizarMentor(email, mentorAtualizado)
+                                            callUpdate.enqueue(object : Callback<MentorModel> {
+                                                override fun onResponse(callUpdate: Call<MentorModel>, response: Response<MentorModel>) {
+                                                    if (response.isSuccessful) {
+                                                        Toast.makeText(context, "Dados atualizados!", Toast.LENGTH_LONG).show();
+                                                        navController.navigate("editarPerfil/$tipoCadastro/$email")
+                                                    } else {
+                                                        val errorBody = response.errorBody()?.string()
+                                                        Log.e("TAG", "Erro na chamada à API: $errorBody")
+                                                        Toast.makeText(context, "Ops, algo deu errado... Pode tentar de novo?", Toast.LENGTH_LONG).show();
+                                                    }
+                                                }
+
+                                                override fun onFailure(call: Call<MentorModel>, t: Throwable) {
+                                                    Log.e("TAG", "Erro na chamada à API: ${t.message}")
+                                                }
+                                            })
+                                        } else {
+                                            val errorBody = response.errorBody()?.string()
+                                            Toast.makeText(context, "Por favor tente novamente mais tarde.", Toast.LENGTH_LONG).show();
+                                            Log.e("TAG", "Erro na chamada à API: $errorBody")
+                                        }
+                                    }
+                                    override fun onFailure(call: Call<MentorModel>, t: Throwable) {
+                                        Toast.makeText(context, "Por favor tente novamente mais tarde.", Toast.LENGTH_LONG).show();
+                                        Log.e("TAG", "Erro na chamada à API: ${t.message}")
+                                    }
+                                })
                             } else {
                                 erroCadastro = true
                             }
