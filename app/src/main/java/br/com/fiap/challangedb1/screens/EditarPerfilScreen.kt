@@ -16,13 +16,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Create
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -34,7 +30,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
@@ -46,7 +41,6 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import br.com.fiap.challangedb1.R
@@ -78,6 +72,9 @@ fun EditarPerfilScreen(navController: NavController, tipoCadastro: String, email
             mutableStateOf("")
         }
         var senha by remember {
+            mutableStateOf("")
+        }
+        var area by remember {
             mutableStateOf("")
         }
         var isExpanded by remember {
@@ -115,6 +112,15 @@ fun EditarPerfilScreen(navController: NavController, tipoCadastro: String, email
                                         genero = aprendiz.generoAprdz
                                         senha = aprendiz.senhaAprdz
                                     };
+                                    val interesses = aprendiz.interesse
+                                    if (!interesses.isNullOrEmpty()) {
+                                        for (interesse in interesses) {
+                                            area = interesse.areaInteresse
+                                        }
+                                    } else {
+                                        // Caso não haja interesses
+                                        Log.d("TAG", "Não há interesses associados ao aprendiz")
+                                    }
                                 } else {
                                     val errorBody = response.errorBody()?.string()
                                     Toast.makeText(context, "Por favor tente novamente mais tarde.", Toast.LENGTH_LONG).show();
@@ -155,6 +161,15 @@ fun EditarPerfilScreen(navController: NavController, tipoCadastro: String, email
                                         genero = mentor.generoMentor
                                         senha = mentor.senhaMentor
                                     };
+                                    val habilidades = mentor.habilidade
+                                    if (!habilidades.isNullOrEmpty()) {
+                                        for (habilidade in habilidades) {
+                                            area = habilidade.areaHabilidade
+                                        }
+                                    } else {
+                                        // Caso não haja interesses
+                                        Log.d("TAG", "Não há interesses associados ao aprendiz")
+                                    }
                                 } else {
                                     val errorBody = response.errorBody()?.string()
                                     Toast.makeText(context, "Por favor tente novamente mais tarde.", Toast.LENGTH_LONG).show();
@@ -264,6 +279,23 @@ fun EditarPerfilScreen(navController: NavController, tipoCadastro: String, email
                         spacer = 4.dp
                     )
                 }
+                Spacer(modifier = Modifier.height(16.dp))
+                if (tipoCadastro == "Aprendiz") {
+                    Text(
+                        text = "Interesses",
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+                } else if (tipoCadastro == "Mentor") {
+                    Text(
+                        text = "Habilidades",
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = area,
+                    modifier = Modifier.padding(start = 8.dp)
+                )
             }
 
             //Botão para editar HABILIDADES/INTERESSES
