@@ -111,22 +111,24 @@ fun InteressesScreen(navController: NavController, tipoCadastro: String, email: 
                         onClick = {
                             if (tipoCadastro == "Aprendiz") {
 
-                                areasSelecionadas.forEach { area ->
-                                    val descricao = area.area
-
-                                    // TODO Enviar a descrição da área para tabela de Aprendiz
-                                    // Exemplo:
-                                    // database.enviarDescricaoAreaConhecimento(descricao)
-                                }
+//                                areasSelecionadas.forEach { area ->
+//                                    val descricao = area.area
+//
+//                                    // TODO Enviar a descrição da área para tabela de Aprendiz
+//                                    // Exemplo:
+//                                    // database.enviarDescricaoAreaConhecimento(descricao)
+//                                }
                                 navController.navigate("editarPerfil/$tipoCadastro/$email")
                             } else if (tipoCadastro == "Mentor") {
-                                areasSelecionadas.forEach { area ->
-                                    val descricao = area.area
 
-                                    // TODO Enviar a descrição da área para tabela de Mentor
-                                    // Exemplo:
-                                    // database.enviarDescricaoAreaConhecimento(descricao)
-                                }
+//                                areasSelecionadas.forEach { area ->
+//                                    val descricao = area.area
+//
+//                                    // TODO Enviar a descrição da área para tabela de Mentor
+//                                    // Exemplo:
+//                                    // database.enviarDescricaoAreaConhecimento(descricao)
+//                                }
+
                                 navController.navigate("editarPerfil/$tipoCadastro/$email")
                             }
                         },
