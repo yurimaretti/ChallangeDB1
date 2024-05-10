@@ -23,6 +23,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
@@ -338,6 +339,18 @@ fun InicioScreen(navController: NavController, tipoCadastro: String, email: Stri
 
 @Composable
 fun CardMentor(mentor: MentorModel) {
+
+    val habilidades = mentor.habilidade
+    var area by remember {
+        mutableStateOf("")
+    }
+
+    if (!habilidades.isNullOrEmpty()) {
+        for (habilidade in habilidades) {
+            area = habilidade.areaHabilidade
+        }
+    }
+
     CardTemplate() {
         Column(
             modifier = Modifier
@@ -365,20 +378,14 @@ fun CardMentor(mentor: MentorModel) {
                     }
                     Column() {
                         Text(
-                            text = "Habilidades",
+                            text = "Interesses",
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(bottom = 12.dp)
                         )
-                        Text(text = "Administração", modifier = Modifier.padding(bottom = 12.dp))
-                        Text(text = "Programação", modifier = Modifier.padding(bottom = 12.dp))
-                        Text(text = "Gestão de Pessoas", modifier = Modifier.padding(bottom = 12.dp))
-                        Text(text = "Metodologias ágeis", modifier = Modifier.padding(bottom = 12.dp))
-                        Text(text = "Mentoria", modifier = Modifier.padding(bottom = 12.dp))
-                        Text(text = "Administração", modifier = Modifier.padding(bottom = 12.dp))
-                        Text(text = "Programação", modifier = Modifier.padding(bottom = 12.dp))
-                        Text(text = "Gestão de Pessoas", modifier = Modifier.padding(bottom = 12.dp))
-                        Text(text = "Metodologias ágeis", modifier = Modifier.padding(bottom = 12.dp))
-                        Text(text = "Mentoria", modifier = Modifier.padding(bottom = 12.dp))
+                        Text(
+                            text = area,
+                            modifier = Modifier.padding(bottom = 12.dp)
+                        )
                     }
                 }
                 Botao(
@@ -405,6 +412,18 @@ fun CardMentor(mentor: MentorModel) {
 
 @Composable
 fun CardAprendiz(aprendiz: AprendizModel) {
+
+    val interesses = aprendiz.interesse
+    var area by remember {
+        mutableStateOf("")
+    }
+
+    if (!interesses.isNullOrEmpty()) {
+        for (interesse in interesses) {
+            area = interesse.areaInteresse
+        }
+    }
+
     CardTemplate() {
         Column(
             modifier = Modifier
@@ -436,16 +455,10 @@ fun CardAprendiz(aprendiz: AprendizModel) {
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(bottom = 12.dp)
                         )
-                        Text(text = "Administração", modifier = Modifier.padding(bottom = 12.dp))
-                        Text(text = "Programação", modifier = Modifier.padding(bottom = 12.dp))
-                        Text(text = "Gestão de Pessoas", modifier = Modifier.padding(bottom = 12.dp))
-                        Text(text = "Metodologias ágeis", modifier = Modifier.padding(bottom = 12.dp))
-                        Text(text = "Mentoria", modifier = Modifier.padding(bottom = 12.dp))
-                        Text(text = "Administração", modifier = Modifier.padding(bottom = 12.dp))
-                        Text(text = "Programação", modifier = Modifier.padding(bottom = 12.dp))
-                        Text(text = "Gestão de Pessoas", modifier = Modifier.padding(bottom = 12.dp))
-                        Text(text = "Metodologias ágeis", modifier = Modifier.padding(bottom = 12.dp))
-                        Text(text = "Mentoria", modifier = Modifier.padding(bottom = 12.dp))
+                        Text(
+                            text = area,
+                            modifier = Modifier.padding(bottom = 12.dp)
+                        )
                     }
                 }
                 Botao(
