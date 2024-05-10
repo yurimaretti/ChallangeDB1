@@ -6,5 +6,6 @@ data class AprendizModel(
     @SerializedName("emailAprendiz") val emailAprdz: String,
     @SerializedName("nomeAprendiz") val nomeAprdz: String,
     @SerializedName("generoAprendiz") val generoAprdz: String,
-    @SerializedName("senhaAprendiz") val senhaAprdz: String
+    @SerializedName("senhaAprendiz") val senhaAprdz: String,
+    @SerializedName("formacaoAprendiz") val formacaoAprdz: List<FormAprdzModel>?
 )

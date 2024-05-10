@@ -69,13 +69,13 @@ fun AlterarSenhaScreen(navController: NavController, tipoCadastro: String, email
         val context = LocalContext.current
         val apiService = RetrofitInstance.apiService
         var aprendiz by remember {
-            mutableStateOf(AprendizModel(email, nome, genero, senha1))
+            mutableStateOf(AprendizModel(email, nome, genero, senha1, null))
         }
         var mentor by remember {
-            mutableStateOf(MentorModel(email, nome, genero, senha1))
+            mutableStateOf(MentorModel(email, nome, genero, senha1, null))
         }
-        var aprendizAtualizado = AprendizModel(email, nome, genero, senha1)
-        var mentorAtualizado = MentorModel(email, nome, genero, senha1)
+        var aprendizAtualizado = AprendizModel(email, nome, genero, senha1, null)
+        var mentorAtualizado = MentorModel(email, nome, genero, senha1, null)
 
         CardTemplate {
             Text(text = "Alteração de Senha",
@@ -170,7 +170,7 @@ fun AlterarSenhaScreen(navController: NavController, tipoCadastro: String, email
                                                 nome = aprendiz.nomeAprdz
                                                 genero = aprendiz.generoAprdz
                                             };
-                                            aprendizAtualizado = AprendizModel(email, nome, genero, senha1)
+                                            aprendizAtualizado = AprendizModel(email, nome, genero, senha1, null)
 
                                             val callUpdate = apiService.atualizarAprdz(email, aprendizAtualizado)
                                             callUpdate.enqueue(object : Callback<AprendizModel> {
@@ -217,7 +217,7 @@ fun AlterarSenhaScreen(navController: NavController, tipoCadastro: String, email
                                                 nome = mentor.nomeMentor
                                                 genero = mentor.generoMentor
                                             };
-                                            mentorAtualizado = MentorModel(email, nome, genero, senha1)
+                                            mentorAtualizado = MentorModel(email, nome, genero, senha1, null)
 
                                             val callUpdate = apiService.atualizarMentor(email, mentorAtualizado)
                                             callUpdate.enqueue(object : Callback<MentorModel> {

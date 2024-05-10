@@ -35,6 +35,7 @@ import br.com.fiap.challangedb1.components.MensagemErro
 import br.com.fiap.challangedb1.components.SeletorAprdzMentor
 import br.com.fiap.challangedb1.components.TemplateScreen
 import br.com.fiap.challangedb1.model.AprendizModel
+import br.com.fiap.challangedb1.model.FormAprdzModel
 import br.com.fiap.challangedb1.model.MentorModel
 import br.com.fiap.challangedb1.service.RetrofitInstance
 import br.com.fiap.challangedb1.util.validation.validacaoEmail
@@ -66,8 +67,8 @@ fun LoginScreen(navController: NavController) {
         mutableStateOf(false)
     }
     val apiService = RetrofitInstance.apiService
-    val aprendiz = AprendizModel(email, nome, genero, senha)
-    val mentor = MentorModel(email, nome, genero, senha)
+    val aprendiz = AprendizModel(email, nome, genero, senha, null)
+    val mentor = MentorModel(email, nome, genero, senha, null)
 
     TemplateScreen(nomeTela = "Login") {
         CardTemplate {
@@ -157,6 +158,8 @@ fun LoginScreen(navController: NavController) {
                                             navController.navigate("inicio/$tipoCadastro/${aprdz.emailAprdz}")
                                         } else {
                                             // Email ou senha incorretos
+                                            val errorBody = response.errorBody()?.string()
+                                            Log.e("TAG", "Erro na chamada à API: $errorBody")
                                             Toast.makeText(context, "Email ou senha incorretos", Toast.LENGTH_LONG).show();
                                         }
                                     } else {
@@ -168,6 +171,7 @@ fun LoginScreen(navController: NavController) {
                                 }
                                 override fun onFailure(call: Call<AprendizModel>, t: Throwable) {
                                     // Erro na chamada à API
+                                    Log.e("TAG", "Erro na chamada à API: ${t.message}")
                                     Toast.makeText(context, "Erro na chamada à API: ${t.message}", Toast.LENGTH_LONG).show()
                                 }
                             })
@@ -189,6 +193,8 @@ fun LoginScreen(navController: NavController) {
                                             navController.navigate("inicio/$tipoCadastro/${mentor.emailMentor}")
                                         } else {
                                             // Email ou senha incorretos
+                                            val errorBody = response.errorBody()?.string()
+                                            Log.e("TAG", "Erro na chamada à API: $errorBody")
                                             Toast.makeText(context, "Email ou senha incorretos", Toast.LENGTH_LONG).show();
                                         }
                                     } else {
@@ -200,6 +206,7 @@ fun LoginScreen(navController: NavController) {
                                 }
                                 override fun onFailure(call: Call<MentorModel>, t: Throwable) {
                                     // Erro na chamada à API
+                                    Log.e("TAG", "Erro na chamada à API: ${t.message}")
                                     Toast.makeText(context, "Erro na chamada à API: ${t.message}", Toast.LENGTH_LONG).show()
                                 }
                             })
