@@ -1,5 +1,7 @@
 package br.com.fiap.challangedb1.screens
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -31,8 +34,16 @@ import br.com.fiap.challangedb1.components.Botao
 import br.com.fiap.challangedb1.components.CardTemplate
 import br.com.fiap.challangedb1.components.TemplateScreen
 import br.com.fiap.challangedb1.enums.AreaConhecimento
+import br.com.fiap.challangedb1.model.AprendizModel
+import br.com.fiap.challangedb1.model.FormMentorModel
+import br.com.fiap.challangedb1.model.HabilidadeModel
+import br.com.fiap.challangedb1.model.InteresseModel
+import br.com.fiap.challangedb1.service.RetrofitInstance
 import br.com.fiap.challangedb1.util.validation.validacaoDropdown
 import br.com.fiap.challangedb1.util.validation.validacaoNome
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 @Composable
 fun InteressesScreen(navController: NavController, tipoCadastro: String, email: String) {
@@ -55,6 +66,11 @@ fun InteressesScreen(navController: NavController, tipoCadastro: String, email: 
     var areasSelecionadas by remember {
         mutableStateOf(emptySet<AreaConhecimento>())
     }
+    val areasSelecionadasString = areasSelecionadas.joinToString(", ") { it.area }
+    var interesse = InteresseModel(0, areasSelecionadasString, email)
+    var habilidade = HabilidadeModel(0, areasSelecionadasString, email)
+    val context = LocalContext.current
+    val apiService = RetrofitInstance.apiService
 
     TemplateScreen(nomeTela = "${nomeTela()}") {
         CardTemplate {
@@ -111,25 +127,111 @@ fun InteressesScreen(navController: NavController, tipoCadastro: String, email: 
                         onClick = {
                             if (tipoCadastro == "Aprendiz") {
 
-//                                areasSelecionadas.forEach { area ->
-//                                    val descricao = area.area
-//
-//                                    // TODO Enviar a descrição da área para tabela de Aprendiz
-//                                    // Exemplo:
-//                                    // database.enviarDescricaoAreaConhecimento(descricao)
-//                                }
-                                navController.navigate("editarPerfil/$tipoCadastro/$email")
+                                val call = apiService.getInteressePorEmail(email)
+
+                                call.enqueue(object : Callback<InteresseModel> {
+                                    override fun onResponse(call: Call<InteresseModel>, response: Response<InteresseModel>) {
+                                        if (response.isSuccessful) {
+                                            val respostaInteresse = response.body()
+                                            var interesseAtualizado = InteresseModel(respostaInteresse!!.interesseId, areasSelecionadasString, email)
+                                            val atualizar = apiService.atualizarInteresse(respostaInteresse!!.interesseId, interesseAtualizado)
+
+                                            atualizar.enqueue(object : Callback<InteresseModel> {
+                                                override fun onResponse(atualizar: Call<InteresseModel>, response: Response<InteresseModel>) {
+                                                    if (response.isSuccessful) {
+                                                        Toast.makeText(context, "Interesses atualizados!", Toast.LENGTH_LONG).show();
+                                                        navController.navigate("editarPerfil/$tipoCadastro/$email")
+                                                    } else {
+                                                        val errorBody = response.errorBody()?.string()
+                                                        Log.e("TAG", "Erro na chamada à API: $errorBody")
+                                                        Toast.makeText(context, "Ops, algo deu errado... Pode tentar de novo?", Toast.LENGTH_LONG).show();
+                                                    }
+                                                }
+                                                override fun onFailure(atualizar: Call<InteresseModel>, t: Throwable) {
+                                                    Log.e("TAG", "Erro na chamada à API: ${t.message}")
+                                                    Toast.makeText(context, "Ops, algo deu errado... Pode tentar de novo?", Toast.LENGTH_LONG).show();
+                                                }
+                                            })
+                                        } else {
+                                            val incluir = apiService.incluirInteresse(interesse)
+
+                                            incluir.enqueue(object : Callback<InteresseModel> {
+                                                override fun onResponse(incluir: Call<InteresseModel>, response: Response<InteresseModel>) {
+                                                    if (response.isSuccessful) {
+                                                        Toast.makeText(context, "Interesses incluídos!", Toast.LENGTH_LONG).show();
+                                                        navController.navigate("editarPerfil/$tipoCadastro/$email")
+                                                    } else {
+                                                        val errorBody = response.errorBody()?.string()
+                                                        Log.e("TAG", "Erro na chamada à API: $errorBody")
+                                                        Toast.makeText(context, "Ops, algo deu errado... Pode tentar de novo?", Toast.LENGTH_LONG).show();
+                                                    }
+                                                }
+                                                override fun onFailure(incluir: Call<InteresseModel>, t: Throwable) {
+                                                    Log.e("TAG", "Erro na chamada à API: ${t.message}")
+                                                    Toast.makeText(context, "Ops, algo deu errado... Pode tentar de novo?", Toast.LENGTH_LONG).show();
+                                                }
+                                            })
+                                        }
+                                    }
+                                    override fun onFailure(call: Call<InteresseModel>, t: Throwable) {
+                                        // Erro na chamada à API
+                                        Log.e("TAG", "Erro na chamada à API: ${t.message}")
+                                        Toast.makeText(context, "Erro na chamada à API: ${t.message}", Toast.LENGTH_LONG).show()
+                                    }
+                                })
                             } else if (tipoCadastro == "Mentor") {
+                                val call = apiService.getHabilidadePorEmail(email)
 
-//                                areasSelecionadas.forEach { area ->
-//                                    val descricao = area.area
-//
-//                                    // TODO Enviar a descrição da área para tabela de Mentor
-//                                    // Exemplo:
-//                                    // database.enviarDescricaoAreaConhecimento(descricao)
-//                                }
+                                call.enqueue(object : Callback<HabilidadeModel> {
+                                    override fun onResponse(call: Call<HabilidadeModel>, response: Response<HabilidadeModel>) {
+                                        if (response.isSuccessful) {
+                                            val respostaHabilidade = response.body()
+                                            var habilidadeAtualizado = HabilidadeModel(respostaHabilidade!!.habilidadeId, areasSelecionadasString, email)
+                                            val atualizar = apiService.atualizarHabilidade(respostaHabilidade!!.habilidadeId, habilidadeAtualizado)
 
-                                navController.navigate("editarPerfil/$tipoCadastro/$email")
+                                            atualizar.enqueue(object : Callback<HabilidadeModel> {
+                                                override fun onResponse(atualizar: Call<HabilidadeModel>, response: Response<HabilidadeModel>) {
+                                                    if (response.isSuccessful) {
+                                                        Toast.makeText(context, "Habilidades atualizadas!", Toast.LENGTH_LONG).show();
+                                                        navController.navigate("editarPerfil/$tipoCadastro/$email")
+                                                    } else {
+                                                        val errorBody = response.errorBody()?.string()
+                                                        Log.e("TAG", "Erro na chamada à API: $errorBody")
+                                                        Toast.makeText(context, "Ops, algo deu errado... Pode tentar de novo?", Toast.LENGTH_LONG).show();
+                                                    }
+                                                }
+                                                override fun onFailure(atualizar: Call<HabilidadeModel>, t: Throwable) {
+                                                    Log.e("TAG", "Erro na chamada à API: ${t.message}")
+                                                    Toast.makeText(context, "Ops, algo deu errado... Pode tentar de novo?", Toast.LENGTH_LONG).show();
+                                                }
+                                            })
+                                        } else {
+                                            val incluir = apiService.incluirHabilidade(habilidade)
+
+                                            incluir.enqueue(object : Callback<HabilidadeModel> {
+                                                override fun onResponse(incluir: Call<HabilidadeModel>, response: Response<HabilidadeModel>) {
+                                                    if (response.isSuccessful) {
+                                                        Toast.makeText(context, "Habilidades incluídas!", Toast.LENGTH_LONG).show();
+                                                        navController.navigate("editarPerfil/$tipoCadastro/$email")
+                                                    } else {
+                                                        val errorBody = response.errorBody()?.string()
+                                                        Log.e("TAG", "Erro na chamada à API: $errorBody")
+                                                        Toast.makeText(context, "Ops, algo deu errado... Pode tentar de novo?", Toast.LENGTH_LONG).show();
+                                                    }
+                                                }
+                                                override fun onFailure(incluir: Call<HabilidadeModel>, t: Throwable) {
+                                                    Log.e("TAG", "Erro na chamada à API: ${t.message}")
+                                                    Toast.makeText(context, "Ops, algo deu errado... Pode tentar de novo?", Toast.LENGTH_LONG).show();
+                                                }
+                                            })
+                                        }
+                                    }
+                                    override fun onFailure(call: Call<HabilidadeModel>, t: Throwable) {
+                                        // Erro na chamada à API
+                                        Log.e("TAG", "Erro na chamada à API: ${t.message}")
+                                        Toast.makeText(context, "Erro na chamada à API: ${t.message}", Toast.LENGTH_LONG).show()
+                                    }
+                                })
                             }
                         },
                         texto = "Salvar",

@@ -3,6 +3,8 @@ package br.com.fiap.challangedb1.service
 import br.com.fiap.challangedb1.model.AprendizModel
 import br.com.fiap.challangedb1.model.FormAprdzModel
 import br.com.fiap.challangedb1.model.FormMentorModel
+import br.com.fiap.challangedb1.model.HabilidadeModel
+import br.com.fiap.challangedb1.model.InteresseModel
 import br.com.fiap.challangedb1.model.MentorModel
 import retrofit2.Call
 import retrofit2.http.Body
@@ -63,4 +65,26 @@ interface ApiService {
 
     @DELETE("/api/FormacaoMentor/{id}")
     fun excluirFormMentor(@Path("id") id: Int): Call<Void>
+
+//Endpoints para a tabela Habilidade - T_DB1_HABILIDADES
+
+    @POST("/api/Habilidade")
+    fun incluirHabilidade(@Body dados: HabilidadeModel): Call<HabilidadeModel>
+
+    @GET("/api/Habilidade/{emailMentor}")
+    fun getHabilidadePorEmail(@Path("emailMentor") emailMentor: String): Call<HabilidadeModel>
+
+    @PUT("/api/Habilidade/{habilidadeId}")
+    fun atualizarHabilidade(@Path("habilidadeId") habilidadeId: Int, @Body dados: HabilidadeModel): Call<HabilidadeModel>
+
+//Endpoints para a tabela Interesse - T_DB1_INTERESSES
+
+    @POST("/api/Interesse")
+    fun incluirInteresse(@Body dados: InteresseModel): Call<InteresseModel>
+
+    @GET("/api/Interesse/{emailAprdz}")
+    fun getInteressePorEmail(@Path("emailAprdz") emailAprdz: String): Call<InteresseModel>
+
+    @PUT("/api/Interesse/{interesseId}")
+    fun atualizarInteresse(@Path("interesseId") interesseId: Int, @Body dados: InteresseModel): Call<InteresseModel>
 }
