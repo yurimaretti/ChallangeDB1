@@ -28,6 +28,9 @@ interface ApiService {
     @GET("/api/Aprendiz/{emailAprendiz}")
     fun getAprendizPorEmail(@Path("emailAprendiz") emailAprendiz: String): Call<AprendizModel>
 
+    @GET("/match-mentores/{emailAprendiz}")
+    fun getMentoresMatchPorEmail(@Path("emailAprendiz") emailAprendiz: String): Call<List<MentorModel>>
+
     @PUT("/api/Aprendiz/{emailAprendiz}")
     fun atualizarAprdz(@Path("emailAprendiz") emailAprendiz: String, @Body dados: AprendizModel): Call<AprendizModel>
 
@@ -41,6 +44,9 @@ interface ApiService {
 
     @GET("/api/Mentor/{emailMentor}")
     fun getMentorPorEmail(@Path("emailMentor") emailMentor: String): Call<MentorModel>
+
+    @GET("/match-aprendizes/{emailMentor}")
+    fun getAprendizesMatchPorEmail(@Path("emailMentor") emailMentor: String): Call<List<AprendizModel>>
 
     @PUT("/api/Mentor/{emailMentor}")
     fun atualizarMentor(@Path("emailMentor") emailMentor: String, @Body dados: MentorModel): Call<MentorModel>

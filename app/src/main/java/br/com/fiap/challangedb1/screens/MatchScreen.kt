@@ -71,7 +71,7 @@ fun MatchScreen(navController: NavController, tipoCadastro: String, email: Strin
             if (tipoCadastro == "Aprendiz") {
                 Botao(
                     onClick = {
-                        val call = apiService.getMentor()
+                        val call = apiService.getMentoresMatchPorEmail(email)
 
                         call.enqueue(object : Callback<List<MentorModel>> {
                             override fun onResponse(call: Call<List<MentorModel>>, response: Response<List<MentorModel>>) {
@@ -100,7 +100,7 @@ fun MatchScreen(navController: NavController, tipoCadastro: String, email: Strin
             } else if (tipoCadastro == "Mentor") {
                 Botao(
                     onClick = {
-                        val call = apiService.getAprendiz()
+                        val call = apiService.getAprendizesMatchPorEmail(email)
 
                         call.enqueue(object : Callback<List<AprendizModel>> {
                             override fun onResponse(call: Call<List<AprendizModel>>, response: Response<List<AprendizModel>>) {
