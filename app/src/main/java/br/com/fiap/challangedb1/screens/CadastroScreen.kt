@@ -92,8 +92,8 @@ fun CadastroScreen(navController: NavController) {
             mutableStateOf(false)
         }
         val apiService = RetrofitInstance.apiService
-        val aprendiz = AprendizModel(email, nome, genero, senha1, null, null)
-        val mentor = MentorModel(email, nome, genero, senha1, null, null)
+        val aprendiz = AprendizModel(email, nome, genero, senha1, null, null, null)
+        val mentor = MentorModel(email, nome, genero, senha1, null, null, null)
 
         CardTemplate {
             Text(text = "Cadastro",

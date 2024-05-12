@@ -8,5 +8,6 @@ data class MentorModel(
     @SerializedName("generoMentor") val generoMentor: String,
     @SerializedName("senhaMentor") val senhaMentor: String,
     @SerializedName("formacaoMentor") val formacaoMentor: List<FormMentorModel>?,
-    @SerializedName("habilidade") val habilidade: List<HabilidadeModel>?
+    @SerializedName("habilidade") val habilidade: List<HabilidadeModel>?,
+    @SerializedName("match") val match: List<MatchModel>?
 )

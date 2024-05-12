@@ -67,8 +67,8 @@ fun LoginScreen(navController: NavController) {
         mutableStateOf(false)
     }
     val apiService = RetrofitInstance.apiService
-    val aprendiz = AprendizModel(email, nome, genero, senha, null, null)
-    val mentor = MentorModel(email, nome, genero, senha, null, null)
+    val aprendiz = AprendizModel(email, nome, genero, senha, null, null, null)
+    val mentor = MentorModel(email, nome, genero, senha, null, null, null)
 
     TemplateScreen(nomeTela = "Login") {
         CardTemplate {

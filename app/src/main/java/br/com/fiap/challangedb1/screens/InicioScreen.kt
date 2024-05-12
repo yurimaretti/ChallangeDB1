@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -92,6 +93,16 @@ fun InicioScreen(navController: NavController, tipoCadastro: String, email: Stri
     }
     var aprendizes by remember {
         mutableStateOf(listOf<AprendizModel>())
+    }
+    val listaAprendizesFiltrada = aprendizes.filter { aprendiz ->
+        aprendiz.interesse?.any { interesse ->
+            interesse.areaInteresse.contains(habilidades)
+        } == true
+    }
+    val listaMentoresFiltrada = mentores.filter { mentor ->
+        mentor.habilidade?.any { habilidade ->
+            habilidade.areaHabilidade.contains(habilidades)
+        } == true
     }
 
     TemplateScreen(nomeTela = "Bem vindo $tipoCadastro!") {
@@ -290,22 +301,69 @@ fun InicioScreen(navController: NavController, tipoCadastro: String, email: Stri
                         }
                     }
                     Spacer(modifier = Modifier.height(16.dp))
-                    Botao(
-                        onClick = {
-                            //TODO Inserir API de pesquisa por Habilidades
-                        },
-                        texto = "Filtrar",
-                        cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.purple_700)),
-                        modifier = Modifier.padding(start = 16.dp, bottom = 16.dp),
-                        enabled = true
-                    ) {
-                        Image(
-                            imageVector = Icons.Default.Search,
-                            contentDescription = "Perfil",
-                            colorFilter = ColorFilter.tint(Color.White),
-                            modifier = Modifier.padding(start = 8.dp)
-                        )
+                    Row {
+                        Botao(
+                            onClick = {
+                                if (tipoCadastro == "Aprendiz") {
+                                    mentores = listaMentoresFiltrada
+                                } else if (tipoCadastro == "Mentor") {
+                                    aprendizes = listaAprendizesFiltrada
+                                }
+                            },
+                            texto = "Filtrar",
+                            cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.purple_700)),
+                            modifier = Modifier.padding(start = 16.dp, bottom = 16.dp),
+                            enabled = true
+                        ) {
+                            Image(
+                                imageVector = Icons.Default.Search,
+                                contentDescription = "Perfil",
+                                colorFilter = ColorFilter.tint(Color.White),
+                                modifier = Modifier.padding(start = 8.dp)
+                            )
+                        }
+                        Botao(
+                            onClick = {
+                                if (tipoCadastro == "Aprendiz") {
+                                    val call = apiService.getMentor()
+
+                                    call.enqueue(object : Callback<List<MentorModel>> {
+                                        override fun onResponse(call: Call<List<MentorModel>>, response: Response<List<MentorModel>>) {
+                                            mentores = response.body()!!
+                                        }
+                                        override fun onFailure(call: Call<List<MentorModel>>, t: Throwable) {
+                                            Toast.makeText(context, "Por favor tente novamente mais tarde.", Toast.LENGTH_LONG).show();
+                                            Log.e("TAG", "Erro na chamada à API: ${t.message}")
+                                        }
+                                    })
+                                } else if (tipoCadastro == "Mentor") {
+                                    val call = apiService.getAprendiz()
+
+                                    call.enqueue(object : Callback<List<AprendizModel>> {
+                                        override fun onResponse(call: Call<List<AprendizModel>>, response: Response<List<AprendizModel>>) {
+                                            aprendizes = response.body()!!
+                                        }
+                                        override fun onFailure(call: Call<List<AprendizModel>>, t: Throwable) {
+                                            Toast.makeText(context, "Por favor tente novamente mais tarde.", Toast.LENGTH_LONG).show();
+                                            Log.e("TAG", "Erro na chamada à API: ${t.message}")
+                                        }
+                                    })
+                                }
+                            },
+                            texto = "Limpar filtro",
+                            cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.danger)),
+                            modifier = Modifier.padding(start = 16.dp, bottom = 16.dp),
+                            enabled = true
+                        ) {
+                            Image(
+                                imageVector = Icons.Default.Clear,
+                                contentDescription = "Perfil",
+                                colorFilter = ColorFilter.tint(Color.White),
+                                modifier = Modifier.padding(start = 8.dp)
+                            )
+                        }
                     }
+
                 }
             }
         }
@@ -320,7 +378,7 @@ fun InicioScreen(navController: NavController, tipoCadastro: String, email: Stri
                     .padding(12.dp)
             ){
                 items(mentores) {
-                    CardMentor(it)
+                    CardMentor(it, email)
                 }
             }
         } else if (tipoCadastro == "Mentor") {
@@ -328,7 +386,7 @@ fun InicioScreen(navController: NavController, tipoCadastro: String, email: Stri
                 .fillMaxWidth()
                 .padding(12.dp)){
                 items(aprendizes) {
-                    CardAprendiz(it)
+                    CardAprendiz(it, email)
                 }
             }
         }
@@ -338,7 +396,9 @@ fun InicioScreen(navController: NavController, tipoCadastro: String, email: Stri
 //Templates dos cards de Mentor e Aprendiz
 
 @Composable
-fun CardMentor(mentor: MentorModel) {
+fun CardMentor(mentor: MentorModel, email: String) {
+
+    //Acesso às habilidades do mentor
 
     val habilidades = mentor.habilidade
     var area by remember {
@@ -348,6 +408,34 @@ fun CardMentor(mentor: MentorModel) {
     if (!habilidades.isNullOrEmpty()) {
         for (habilidade in habilidades) {
             area = habilidade.areaHabilidade
+        }
+    }
+
+    //Acesso aos matches do mentor
+
+    val matches = mentor.match
+    var curtMentor by remember {
+        mutableStateOf(0)
+    }
+    var curtAprdz by remember {
+        mutableStateOf(0)
+    }
+    var emailAprdz by remember {
+        mutableStateOf("")
+    }
+    var emailMentor by remember {
+        mutableStateOf("")
+    }
+    var matchId by remember {
+        mutableStateOf(0)
+    }
+    if (!matches.isNullOrEmpty()) {
+        for (match in matches) {
+            matchId = match.matchId
+            emailAprdz = match.emailAprdz
+            emailMentor = match.emailMentor
+            curtMentor = match.curtidaMentor
+            curtAprdz = match.curtidaAprendiz
         }
     }
 
@@ -378,13 +466,15 @@ fun CardMentor(mentor: MentorModel) {
                     }
                     Column() {
                         Text(
-                            text = "Interesses",
+                            text = "Habilidades",
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(bottom = 12.dp)
                         )
                         Text(
                             text = area,
-                            modifier = Modifier.padding(bottom = 12.dp)
+                            modifier = Modifier
+                                .padding(bottom = 12.dp)
+                                .width(150.dp)
                         )
                     }
                 }
@@ -411,16 +501,45 @@ fun CardMentor(mentor: MentorModel) {
 }
 
 @Composable
-fun CardAprendiz(aprendiz: AprendizModel) {
+fun CardAprendiz(aprendiz: AprendizModel, email: String) {
+
+    //Acesso aos interesses do aprendiz
 
     val interesses = aprendiz.interesse
     var area by remember {
         mutableStateOf("")
     }
-
     if (!interesses.isNullOrEmpty()) {
         for (interesse in interesses) {
             area = interesse.areaInteresse
+        }
+    }
+
+    //Acesso aos matches do aprendiz
+
+    val matches = aprendiz.match
+    var curtMentor by remember {
+        mutableStateOf(0)
+    }
+    var curtAprdz by remember {
+        mutableStateOf(0)
+    }
+    var emailAprdz by remember {
+        mutableStateOf("")
+    }
+    var emailMentor by remember {
+        mutableStateOf("")
+    }
+    var matchId by remember {
+        mutableStateOf(0)
+    }
+    if (!matches.isNullOrEmpty()) {
+        for (match in matches) {
+            matchId = match.matchId
+            emailAprdz = match.emailAprdz
+            emailMentor = match.emailMentor
+            curtMentor = match.curtidaMentor
+            curtAprdz = match.curtidaAprendiz
         }
     }
 
@@ -457,7 +576,9 @@ fun CardAprendiz(aprendiz: AprendizModel) {
                         )
                         Text(
                             text = area,
-                            modifier = Modifier.padding(bottom = 12.dp)
+                            modifier = Modifier
+                                .padding(bottom = 12.dp)
+                                .width(150.dp)
                         )
                     }
                 }

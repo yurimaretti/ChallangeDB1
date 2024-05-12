@@ -126,7 +126,6 @@ fun InteressesScreen(navController: NavController, tipoCadastro: String, email: 
                     Botao(
                         onClick = {
                             if (tipoCadastro == "Aprendiz") {
-
                                 val call = apiService.getInteressePorEmail(email)
 
                                 call.enqueue(object : Callback<InteresseModel> {
@@ -144,12 +143,12 @@ fun InteressesScreen(navController: NavController, tipoCadastro: String, email: 
                                                     } else {
                                                         val errorBody = response.errorBody()?.string()
                                                         Log.e("TAG", "Erro na chamada à API: $errorBody")
-                                                        Toast.makeText(context, "Ops, algo deu errado... Pode tentar de novo?", Toast.LENGTH_LONG).show();
+                                                        Toast.makeText(context, "1 Ops, algo deu errado... Pode tentar de novo?", Toast.LENGTH_LONG).show();
                                                     }
                                                 }
                                                 override fun onFailure(atualizar: Call<InteresseModel>, t: Throwable) {
                                                     Log.e("TAG", "Erro na chamada à API: ${t.message}")
-                                                    Toast.makeText(context, "Ops, algo deu errado... Pode tentar de novo?", Toast.LENGTH_LONG).show();
+                                                    Toast.makeText(context, "2 Ops, algo deu errado... Pode tentar de novo?", Toast.LENGTH_LONG).show();
                                                 }
                                             })
                                         } else {
@@ -163,12 +162,12 @@ fun InteressesScreen(navController: NavController, tipoCadastro: String, email: 
                                                     } else {
                                                         val errorBody = response.errorBody()?.string()
                                                         Log.e("TAG", "Erro na chamada à API: $errorBody")
-                                                        Toast.makeText(context, "Ops, algo deu errado... Pode tentar de novo?", Toast.LENGTH_LONG).show();
+                                                        Toast.makeText(context, "3 Ops, algo deu errado... Pode tentar de novo?", Toast.LENGTH_LONG).show();
                                                     }
                                                 }
                                                 override fun onFailure(incluir: Call<InteresseModel>, t: Throwable) {
                                                     Log.e("TAG", "Erro na chamada à API: ${t.message}")
-                                                    Toast.makeText(context, "Ops, algo deu errado... Pode tentar de novo?", Toast.LENGTH_LONG).show();
+                                                    Toast.makeText(context, "4 Ops, algo deu errado... Pode tentar de novo?", Toast.LENGTH_LONG).show();
                                                 }
                                             })
                                         }

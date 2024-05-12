@@ -8,5 +8,6 @@ data class AprendizModel(
     @SerializedName("generoAprendiz") val generoAprdz: String,
     @SerializedName("senhaAprendiz") val senhaAprdz: String,
     @SerializedName("formacaoAprendiz") val formacaoAprdz: List<FormAprdzModel>?,
-    @SerializedName("interesse") val interesse: List<InteresseModel>?
+    @SerializedName("interesse") val interesse: List<InteresseModel>?,
+    @SerializedName("match") val match: List<MatchModel>?
 )

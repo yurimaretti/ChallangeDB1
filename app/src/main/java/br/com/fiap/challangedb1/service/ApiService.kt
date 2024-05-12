@@ -5,6 +5,7 @@ import br.com.fiap.challangedb1.model.FormAprdzModel
 import br.com.fiap.challangedb1.model.FormMentorModel
 import br.com.fiap.challangedb1.model.HabilidadeModel
 import br.com.fiap.challangedb1.model.InteresseModel
+import br.com.fiap.challangedb1.model.MatchModel
 import br.com.fiap.challangedb1.model.MentorModel
 import retrofit2.Call
 import retrofit2.http.Body
@@ -87,4 +88,21 @@ interface ApiService {
 
     @PUT("/api/Interesse/{interesseId}")
     fun atualizarInteresse(@Path("interesseId") interesseId: Int, @Body dados: InteresseModel): Call<InteresseModel>
+
+//Endpoints para a tabela Interesse - T_DB1_MATCH
+
+    @POST("/api/Match")
+    fun incluirMatch(@Body dados: MatchModel): Call<MatchModel>
+
+    @GET("/api/Match/por-aprdz/{emailAprdz}")
+    fun getMatchPorAprdz(@Path("emailAprdz") emailAprdz: String): Call<MatchModel>
+
+    @GET("/api/Match/por-mentor/{emailMentor}")
+    fun getMatchPorMentor(@Path("emailMentor") emailMentor: String): Call<MatchModel>
+
+    @GET("/api/Match/por-emails/{emailAprdz}/{emailMentor}")
+    fun getMatchPorEmails(@Path("emailAprdz") emailAprdz: String, @Path("emailMentor") emailMentor: String): Call<MatchModel>
+
+    @PUT("/api/Match/{id}")
+    fun atualizarMatch(@Path("matchId") matchId: Int, @Body dados: MatchModel): Call<MatchModel>
 }
