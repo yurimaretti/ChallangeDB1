@@ -103,6 +103,6 @@ interface ApiService {
     @GET("/api/Match/por-emails/{emailAprdz}/{emailMentor}")
     fun getMatchPorEmails(@Path("emailAprdz") emailAprdz: String, @Path("emailMentor") emailMentor: String): Call<MatchModel>
 
-    @PUT("/api/Match/{id}")
+    @PUT("/api/Match/{matchId}")
     fun atualizarMatch(@Path("matchId") matchId: Int, @Body dados: MatchModel): Call<MatchModel>
 }

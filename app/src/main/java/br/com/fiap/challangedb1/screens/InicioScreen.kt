@@ -66,8 +66,12 @@ import br.com.fiap.challangedb1.components.TemplateScreen
 import br.com.fiap.challangedb1.enums.AreaConhecimento
 import br.com.fiap.challangedb1.enums.GrauInstrucao
 import br.com.fiap.challangedb1.model.AprendizModel
+import br.com.fiap.challangedb1.model.FormAprdzModel
+import br.com.fiap.challangedb1.model.InteresseModel
+import br.com.fiap.challangedb1.model.MatchModel
 import br.com.fiap.challangedb1.model.MentorModel
 import br.com.fiap.challangedb1.service.RetrofitInstance
+import br.com.fiap.challangedb1.service.RetrofitInstance.apiService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -378,15 +382,16 @@ fun InicioScreen(navController: NavController, tipoCadastro: String, email: Stri
                     .padding(12.dp)
             ){
                 items(mentores) {
-                    CardMentor(it, email)
+                    CardMentor(it, email, navController, tipoCadastro)
                 }
             }
         } else if (tipoCadastro == "Mentor") {
             LazyRow(modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp)){
+                .padding(12.dp)
+            ){
                 items(aprendizes) {
-                    CardAprendiz(it, email)
+                    CardAprendiz(it, email, navController, tipoCadastro)
                 }
             }
         }
@@ -396,20 +401,13 @@ fun InicioScreen(navController: NavController, tipoCadastro: String, email: Stri
 //Templates dos cards de Mentor e Aprendiz
 
 @Composable
-fun CardMentor(mentor: MentorModel, email: String) {
+fun CardMentor(mentor: MentorModel, email: String, navController: NavController, tipoCadastro: String) {
+
+    val context = LocalContext.current
 
     //Acesso às habilidades do mentor
 
     val habilidades = mentor.habilidade
-    var area by remember {
-        mutableStateOf("")
-    }
-
-    if (!habilidades.isNullOrEmpty()) {
-        for (habilidade in habilidades) {
-            area = habilidade.areaHabilidade
-        }
-    }
 
     //Acesso aos matches do mentor
 
@@ -470,16 +468,78 @@ fun CardMentor(mentor: MentorModel, email: String) {
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(bottom = 12.dp)
                         )
-                        Text(
-                            text = area,
-                            modifier = Modifier
-                                .padding(bottom = 12.dp)
-                                .width(150.dp)
-                        )
+                        if (!habilidades.isNullOrEmpty()) {
+                            habilidades.forEach { habilidade ->
+                                Text(
+                                    text = "${habilidade.areaHabilidade}",
+                                    modifier = Modifier.padding(bottom = 12.dp)
+                                )
+                            }
+                        } else {
+                            Text(
+                                text = "Sem habilidades registradas",
+                                modifier = Modifier.padding(bottom = 12.dp)
+                            )
+                        }
                     }
                 }
                 Botao(
-                    onClick = { /*TODO incluir API para curtir*/ },
+                    onClick = {
+                        val call = apiService.getMatchPorEmails(email, mentor.emailMentor)
+
+                        call.enqueue(object : Callback<MatchModel> {
+                            override fun onResponse(call: Call<MatchModel>, response: Response<MatchModel>) {
+                                if (response.isSuccessful) {
+                                    val respostaMatch = response.body()
+                                    var id = respostaMatch!!.matchId
+                                    var matchAtualizado = MatchModel(respostaMatch.matchId, 1, respostaMatch.curtidaMentor, email, emailMentor)
+                                    var atualizar = apiService.atualizarMatch(id, matchAtualizado)
+
+                                    atualizar.enqueue(object : Callback<MatchModel> {
+                                        override fun onResponse(atualizar: Call<MatchModel>, response: Response<MatchModel>) {
+                                            if (response.isSuccessful) {
+                                                Toast.makeText(context, "Mentor curtido!", Toast.LENGTH_LONG).show();
+                                                navController.navigate("inicio/$tipoCadastro/$email")
+                                            } else {
+                                                val errorBody = response.errorBody()?.string()
+                                                Log.e("TAG", "Erro na chamada à API: $errorBody")
+                                                Toast.makeText(context, "Ops, algo deu errado... Pode tentar de novo?", Toast.LENGTH_LONG).show();
+                                            }
+                                        }
+                                        override fun onFailure(atualizar: Call<MatchModel>, t: Throwable) {
+                                            Log.e("TAG", "Erro na chamada à API: ${t.message}")
+                                            Toast.makeText(context, "Ops, algo deu errado... Pode tentar de novo?", Toast.LENGTH_LONG).show();
+                                        }
+                                    })
+                                } else {
+                                    var match = MatchModel(0, 1, 0, email, mentor.emailMentor)
+                                    val incluir = apiService.incluirMatch(match)
+
+                                    incluir.enqueue(object : Callback<MatchModel> {
+                                        override fun onResponse(incluir: Call<MatchModel>, response: Response<MatchModel>) {
+                                            if (response.isSuccessful) {
+                                                Toast.makeText(context, "Mentor curtido!", Toast.LENGTH_LONG).show();
+                                                navController.navigate("inicio/$tipoCadastro/$email")
+                                            } else {
+                                                val errorBody = response.errorBody()?.string()
+                                                Log.e("TAG", "Erro na chamada à API: $errorBody")
+                                                Toast.makeText(context, "Ops, algo deu errado... Pode tentar de novo?", Toast.LENGTH_LONG).show();
+                                            }
+                                        }
+                                        override fun onFailure(incluir: Call<MatchModel>, t: Throwable) {
+                                            Log.e("TAG", "Erro na chamada à API: ${t.message}")
+                                            Toast.makeText(context, "Ops, algo deu errado... Pode tentar de novo?", Toast.LENGTH_LONG).show();
+                                        }
+                                    })
+                                }
+                            }
+                            override fun onFailure(call: Call<MatchModel>, t: Throwable) {
+                                // Erro na chamada à API
+                                Log.e("TAG", "Erro na chamada à API: ${t.message}")
+                                Toast.makeText(context, "Erro na chamada à API: ${t.message}", Toast.LENGTH_LONG).show()
+                            }
+                        })
+                    },
                     texto = "Curtir",
                     cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.purple_700)),
                     modifier = Modifier
@@ -501,19 +561,13 @@ fun CardMentor(mentor: MentorModel, email: String) {
 }
 
 @Composable
-fun CardAprendiz(aprendiz: AprendizModel, email: String) {
+fun CardAprendiz(aprendiz: AprendizModel, email: String, navController: NavController, tipoCadastro: String) {
+
+    val context = LocalContext.current
 
     //Acesso aos interesses do aprendiz
 
     val interesses = aprendiz.interesse
-    var area by remember {
-        mutableStateOf("")
-    }
-    if (!interesses.isNullOrEmpty()) {
-        for (interesse in interesses) {
-            area = interesse.areaInteresse
-        }
-    }
 
     //Acesso aos matches do aprendiz
 
@@ -574,16 +628,78 @@ fun CardAprendiz(aprendiz: AprendizModel, email: String) {
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(bottom = 12.dp)
                         )
-                        Text(
-                            text = area,
-                            modifier = Modifier
-                                .padding(bottom = 12.dp)
-                                .width(150.dp)
-                        )
+                        if (!interesses.isNullOrEmpty()) {
+                            interesses.forEach { interesse ->
+                                Text(
+                                    text = "${interesse.areaInteresse}",
+                                    modifier = Modifier.padding(bottom = 12.dp)
+                                )
+                            }
+                        } else {
+                            Text(
+                                text = "Sem interesses registrados",
+                                modifier = Modifier.padding(bottom = 12.dp)
+                            )
+                        }
                     }
                 }
                 Botao(
-                    onClick = { /*TODO incluir API para curtir*/ },
+                    onClick = {
+                        val call = apiService.getMatchPorEmails(aprendiz.emailAprdz, email)
+
+                        call.enqueue(object : Callback<MatchModel> {
+                            override fun onResponse(call: Call<MatchModel>, response: Response<MatchModel>) {
+                                if (response.isSuccessful) {
+                                    val respostaMatch = response.body()
+                                    var id = respostaMatch!!.matchId
+                                    var matchAtualizado = MatchModel(respostaMatch.matchId, respostaMatch.curtidaAprendiz, 1, emailAprdz, email)
+                                    var atualizar = apiService.atualizarMatch(id, matchAtualizado)
+
+                                    atualizar.enqueue(object : Callback<MatchModel> {
+                                        override fun onResponse(atualizar: Call<MatchModel>, response: Response<MatchModel>) {
+                                            if (response.isSuccessful) {
+                                                Toast.makeText(context, "Aprendiz curtido!", Toast.LENGTH_LONG).show();
+                                                navController.navigate("inicio/$tipoCadastro/$email")
+                                            } else {
+                                                val errorBody = response.errorBody()?.string()
+                                                Log.e("TAG", "Erro na chamada à API: $errorBody")
+                                                Toast.makeText(context, "Ops, algo deu errado... Pode tentar de novo?", Toast.LENGTH_LONG).show();
+                                            }
+                                        }
+                                        override fun onFailure(atualizar: Call<MatchModel>, t: Throwable) {
+                                            Log.e("TAG", "Erro na chamada à API: ${t.message}")
+                                            Toast.makeText(context, "Ops, algo deu errado... Pode tentar de novo?", Toast.LENGTH_LONG).show();
+                                        }
+                                    })
+                                } else {
+                                    var match = MatchModel(0, 0, 1, aprendiz.emailAprdz, email)
+                                    val incluir = apiService.incluirMatch(match)
+
+                                    incluir.enqueue(object : Callback<MatchModel> {
+                                        override fun onResponse(incluir: Call<MatchModel>, response: Response<MatchModel>) {
+                                            if (response.isSuccessful) {
+                                                Toast.makeText(context, "Aprendiz curtido!", Toast.LENGTH_LONG).show();
+                                                navController.navigate("inicio/$tipoCadastro/$email")
+                                            } else {
+                                                val errorBody = response.errorBody()?.string()
+                                                Log.e("TAG", "Erro na chamada à API: $errorBody")
+                                                Toast.makeText(context, "Ops, algo deu errado... Pode tentar de novo?", Toast.LENGTH_LONG).show();
+                                            }
+                                        }
+                                        override fun onFailure(incluir: Call<MatchModel>, t: Throwable) {
+                                            Log.e("TAG", "Erro na chamada à API: ${t.message}")
+                                            Toast.makeText(context, "Ops, algo deu errado... Pode tentar de novo?", Toast.LENGTH_LONG).show();
+                                        }
+                                    })
+                                }
+                            }
+                            override fun onFailure(call: Call<MatchModel>, t: Throwable) {
+                                // Erro na chamada à API
+                                Log.e("TAG", "Erro na chamada à API: ${t.message}")
+                                Toast.makeText(context, "Erro na chamada à API: ${t.message}", Toast.LENGTH_LONG).show()
+                            }
+                        })
+                    },
                     texto = "Curtir",
                     cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.purple_700)),
                     modifier = Modifier
