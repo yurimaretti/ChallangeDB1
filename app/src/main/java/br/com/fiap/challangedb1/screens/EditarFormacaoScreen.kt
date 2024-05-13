@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -169,7 +168,7 @@ fun EditarFormacaoScreen(navController: NavController, tipoCadastro: String, ema
                     .padding(12.dp)
                 ) {
                     items(formAprdz) {
-                        CardFormacaoAprdz(it)
+                        CardFormacaoAprdz(it, navController, email, tipoCadastro)
                     }
                 }
             } else if (tipoCadastro == "Mentor") {
@@ -178,7 +177,7 @@ fun EditarFormacaoScreen(navController: NavController, tipoCadastro: String, ema
                     .padding(12.dp)
                 ) {
                     items(formMentor) {
-                        CardFormacaoMentor(it)
+                        CardFormacaoMentor(it, navController, email, tipoCadastro)
                     }
                 }
             }
@@ -187,7 +186,7 @@ fun EditarFormacaoScreen(navController: NavController, tipoCadastro: String, ema
 }
 
 @Composable
-fun CardFormacaoAprdz(formAprendiz: FormAprdzModel) {
+fun CardFormacaoAprdz(formAprendiz: FormAprdzModel, navController: NavController, email: String, tipoCadastro: String) {
 
     val context = LocalContext.current
 
@@ -234,7 +233,8 @@ fun CardFormacaoAprdz(formAprendiz: FormAprdzModel) {
                                 call.enqueue(object : Callback<Void> {
                                     override fun onResponse(call: Call<Void>, response: Response<Void>) {
                                         if (response.isSuccessful) {
-                                            Toast.makeText(context, "Formação excluída, efetue nova consulta!", Toast.LENGTH_LONG).show();
+                                            navController.navigate("editarFormacao/$tipoCadastro/$email")
+                                            Toast.makeText(context, "Formação excluída!", Toast.LENGTH_LONG).show();
                                         } else {
                                             val errorBody = response.errorBody()?.string()
                                             Log.e("TAG", "Erro na chamada à API: $errorBody")
@@ -267,7 +267,7 @@ fun CardFormacaoAprdz(formAprendiz: FormAprdzModel) {
 }
 
 @Composable
-fun CardFormacaoMentor(formMentor: FormMentorModel) {
+fun CardFormacaoMentor(formMentor: FormMentorModel, navController: NavController, email: String, tipoCadastro: String) {
 
     val context = LocalContext.current
 
@@ -314,7 +314,8 @@ fun CardFormacaoMentor(formMentor: FormMentorModel) {
                                 call.enqueue(object : Callback<Void> {
                                     override fun onResponse(call: Call<Void>, response: Response<Void>) {
                                         if (response.isSuccessful) {
-                                            Toast.makeText(context, "Formação excluída, efetue nova consulta!", Toast.LENGTH_LONG).show();
+                                            navController.navigate("editarFormacao/$tipoCadastro/$email")
+                                            Toast.makeText(context, "Formação excluída!", Toast.LENGTH_LONG).show();
                                         } else {
                                             val errorBody = response.errorBody()?.string()
                                             Log.e("TAG", "Erro na chamada à API: $errorBody")

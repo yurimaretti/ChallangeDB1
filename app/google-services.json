@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "741188859446",
+    "project_id": "challangedb",
+    "storage_bucket": "challangedb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:741188859446:android:81ea33caab5f379a390a97",
+        "android_client_info": {
+          "package_name": "br.com.fiap.challangedb1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgxy6DqCd1YWHTE7sb6g4WzENdiKxFl6s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

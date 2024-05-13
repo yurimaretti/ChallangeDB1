@@ -41,6 +41,7 @@ import br.com.fiap.challangedb1.components.Botao
 import br.com.fiap.challangedb1.components.CardTemplate
 import br.com.fiap.challangedb1.components.TemplateScreen
 import br.com.fiap.challangedb1.model.AprendizModel
+import br.com.fiap.challangedb1.model.MatchModel
 import br.com.fiap.challangedb1.model.MentorModel
 import br.com.fiap.challangedb1.service.RetrofitInstance
 import retrofit2.Call
@@ -137,7 +138,7 @@ fun MatchScreen(navController: NavController, tipoCadastro: String, email: Strin
                     .padding(12.dp)
                 ){
                     items(mentores) {
-                        CardMatchMentor(it)
+                        CardMatchMentor(it, email, navController, tipoCadastro)
                     }
                 }
             } else if (tipoCadastro == "Mentor") {
@@ -146,7 +147,7 @@ fun MatchScreen(navController: NavController, tipoCadastro: String, email: Strin
                     .padding(12.dp)
                 ){
                     items(aprendizes) {
-                        CardMatchAprdz(it)
+                        CardMatchAprdz(it, email, navController, tipoCadastro)
                     }
                 }
             }
@@ -168,10 +169,40 @@ fun MatchScreen(navController: NavController, tipoCadastro: String, email: Strin
 //Templates dos cards de Match dos Aprendizes e Mentores
 
 @Composable
-fun CardMatchAprdz(aprendiz: AprendizModel) {
+fun CardMatchAprdz(aprendiz: AprendizModel, email: String, navController: NavController, tipoCadastro: String) {
+
+    val context = LocalContext.current
 
     val interesses = aprendiz.interesse
     val formacoes = aprendiz.formacaoAprdz
+
+    //Acesso aos matches do aprendiz
+
+    val matches = aprendiz.match
+    var curtMentor by remember {
+        mutableStateOf(0)
+    }
+    var curtAprdz by remember {
+        mutableStateOf(0)
+    }
+    var emailAprdz by remember {
+        mutableStateOf("")
+    }
+    var emailMentor by remember {
+        mutableStateOf("")
+    }
+    var matchId by remember {
+        mutableStateOf(0)
+    }
+    if (!matches.isNullOrEmpty()) {
+        for (match in matches) {
+            matchId = match.matchId
+            emailAprdz = match.emailAprdz
+            emailMentor = match.emailMentor
+            curtMentor = match.curtidaMentor
+            curtAprdz = match.curtidaAprendiz
+        }
+    }
 
     Column {
         CardTemplate() {
@@ -256,7 +287,46 @@ fun CardMatchAprdz(aprendiz: AprendizModel) {
                         }
                         Spacer(modifier = Modifier.height(16.dp))
                         Botao(
-                            onClick = { /*TODO*/ },
+                            onClick = {
+                                val call = RetrofitInstance.apiService.getMatchPorEmails(aprendiz.emailAprdz, email)
+
+                                call.enqueue(object : Callback<MatchModel> {
+                                    override fun onResponse(call: Call<MatchModel>, response: Response<MatchModel>) {
+                                        if (response.isSuccessful) {
+                                            val respostaMatch = response.body()
+                                            var id = respostaMatch!!.matchId
+                                            var matchAtualizado = MatchModel(respostaMatch.matchId, respostaMatch.curtidaAprendiz, 0, emailAprdz, email)
+                                            var atualizar = RetrofitInstance.apiService.atualizarMatch(id, matchAtualizado)
+
+                                            atualizar.enqueue(object : Callback<MatchModel> {
+                                                override fun onResponse(atualizar: Call<MatchModel>, response: Response<MatchModel>) {
+                                                    if (response.isSuccessful) {
+                                                        Toast.makeText(context, "Match com Aprendiz desfeito!", Toast.LENGTH_LONG).show();
+                                                        navController.navigate("match/$tipoCadastro/$email")
+                                                    } else {
+                                                        val errorBody = response.errorBody()?.string()
+                                                        Log.e("TAG", "Erro na chamada à API: $errorBody")
+                                                        Toast.makeText(context, "Ops, algo deu errado... Pode tentar de novo?", Toast.LENGTH_LONG).show();
+                                                    }
+                                                }
+                                                override fun onFailure(atualizar: Call<MatchModel>, t: Throwable) {
+                                                    Log.e("TAG", "Erro na chamada à API: ${t.message}")
+                                                    Toast.makeText(context, "Ops, algo deu errado... Pode tentar de novo?", Toast.LENGTH_LONG).show();
+                                                }
+                                            })
+                                        } else {
+                                            val errorBody = response.errorBody()?.string()
+                                            Log.e("TAG", "Erro na chamada à API: $errorBody")
+                                            Toast.makeText(context, "Ops, algo deu errado... Pode tentar de novo?", Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                    override fun onFailure(call: Call<MatchModel>, t: Throwable) {
+                                        // Erro na chamada à API
+                                        Log.e("TAG", "Erro na chamada à API: ${t.message}")
+                                        Toast.makeText(context, "Erro na chamada à API: ${t.message}", Toast.LENGTH_LONG).show()
+                                    }
+                                })
+                            },
                             texto = "Desfazer Match",
                             cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.purple_700)),
                             modifier = Modifier.fillMaxWidth(),
@@ -277,10 +347,40 @@ fun CardMatchAprdz(aprendiz: AprendizModel) {
 }
 
 @Composable
-fun CardMatchMentor(mentor: MentorModel) {
+fun CardMatchMentor(mentor: MentorModel, email: String, navController: NavController, tipoCadastro: String) {
+
+    val context = LocalContext.current
 
     val habilidades = mentor.habilidade
     val formacoes = mentor.formacaoMentor
+
+    //Acesso aos matches do mentor
+
+    val matches = mentor.match
+    var curtMentor by remember {
+        mutableStateOf(0)
+    }
+    var curtAprdz by remember {
+        mutableStateOf(0)
+    }
+    var emailAprdz by remember {
+        mutableStateOf("")
+    }
+    var emailMentor by remember {
+        mutableStateOf("")
+    }
+    var matchId by remember {
+        mutableStateOf(0)
+    }
+    if (!matches.isNullOrEmpty()) {
+        for (match in matches) {
+            matchId = match.matchId
+            emailAprdz = match.emailAprdz
+            emailMentor = match.emailMentor
+            curtMentor = match.curtidaMentor
+            curtAprdz = match.curtidaAprendiz
+        }
+    }
 
     Column {
         CardTemplate() {
@@ -365,7 +465,46 @@ fun CardMatchMentor(mentor: MentorModel) {
                         }
                         Spacer(modifier = Modifier.height(16.dp))
                         Botao(
-                            onClick = { /*TODO*/ },
+                            onClick = {
+                                val call = RetrofitInstance.apiService.getMatchPorEmails(email, mentor.emailMentor)
+
+                                call.enqueue(object : Callback<MatchModel> {
+                                    override fun onResponse(call: Call<MatchModel>, response: Response<MatchModel>) {
+                                        if (response.isSuccessful) {
+                                            val respostaMatch = response.body()
+                                            var id = respostaMatch!!.matchId
+                                            var matchAtualizado = MatchModel(respostaMatch.matchId, 0, respostaMatch.curtidaMentor, email, emailMentor)
+                                            var atualizar = RetrofitInstance.apiService.atualizarMatch(id, matchAtualizado)
+
+                                            atualizar.enqueue(object : Callback<MatchModel> {
+                                                override fun onResponse(atualizar: Call<MatchModel>, response: Response<MatchModel>) {
+                                                    if (response.isSuccessful) {
+                                                        Toast.makeText(context, "Match com Mentor desfeito!", Toast.LENGTH_LONG).show();
+                                                        navController.navigate("match/$tipoCadastro/$email")
+                                                    } else {
+                                                        val errorBody = response.errorBody()?.string()
+                                                        Log.e("TAG", "Erro na chamada à API: $errorBody")
+                                                        Toast.makeText(context, "Ops, algo deu errado... Pode tentar de novo?", Toast.LENGTH_LONG).show();
+                                                    }
+                                                }
+                                                override fun onFailure(atualizar: Call<MatchModel>, t: Throwable) {
+                                                    Log.e("TAG", "Erro na chamada à API: ${t.message}")
+                                                    Toast.makeText(context, "Ops, algo deu errado... Pode tentar de novo?", Toast.LENGTH_LONG).show();
+                                                }
+                                            })
+                                        } else {
+                                            val errorBody = response.errorBody()?.string()
+                                            Log.e("TAG", "Erro na chamada à API: $errorBody")
+                                            Toast.makeText(context, "Ops, algo deu errado... Pode tentar de novo?", Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                    override fun onFailure(call: Call<MatchModel>, t: Throwable) {
+                                        // Erro na chamada à API
+                                        Log.e("TAG", "Erro na chamada à API: ${t.message}")
+                                        Toast.makeText(context, "Erro na chamada à API: ${t.message}", Toast.LENGTH_LONG).show()
+                                    }
+                                })
+                            },
                             texto = "Desfazer Match",
                             cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.purple_700)),
                             modifier = Modifier.fillMaxWidth(),

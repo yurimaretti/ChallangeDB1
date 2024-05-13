@@ -1,16 +1,15 @@
 package br.com.fiap.challangedb1.screens
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.os.Build
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.LinearOutSlowInEasing
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -18,7 +17,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -52,22 +50,18 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.NotificationCompat
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import br.com.fiap.challangedb1.R
 import br.com.fiap.challangedb1.components.Botao
-import br.com.fiap.challangedb1.components.BotaoOutline
 import br.com.fiap.challangedb1.components.CardTemplate
 import br.com.fiap.challangedb1.components.TemplateScreen
 import br.com.fiap.challangedb1.enums.AreaConhecimento
-import br.com.fiap.challangedb1.enums.GrauInstrucao
 import br.com.fiap.challangedb1.model.AprendizModel
-import br.com.fiap.challangedb1.model.FormAprdzModel
-import br.com.fiap.challangedb1.model.InteresseModel
 import br.com.fiap.challangedb1.model.MatchModel
 import br.com.fiap.challangedb1.model.MentorModel
 import br.com.fiap.challangedb1.service.RetrofitInstance
@@ -539,6 +533,27 @@ fun CardMentor(mentor: MentorModel, email: String, navController: NavController,
                                 Toast.makeText(context, "Erro na chamada à API: ${t.message}", Toast.LENGTH_LONG).show()
                             }
                         })
+
+                        //Gerar Push
+
+                        fun NotificationManager.sendNotification(title: String, message: String) {
+                            val channelId = "channel_id"
+                            val notificationBuilder = NotificationCompat.Builder(context, channelId)
+                                .setContentTitle(title)
+                                .setContentText(message)
+                                .setSmallIcon(R.drawable.jigsaw)
+                                .setAutoCancel(true)
+
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                val channel = NotificationChannel(channelId, "Channel Name", NotificationManager.IMPORTANCE_DEFAULT)
+                                createNotificationChannel(channel)
+                            }
+
+                            notify(0, notificationBuilder.build())
+                        }
+
+                        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                        notificationManager.sendNotification("Mentor Curtido", "Você curtiu um mentor!")
                     },
                     texto = "Curtir",
                     cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.purple_700)),
@@ -699,6 +714,27 @@ fun CardAprendiz(aprendiz: AprendizModel, email: String, navController: NavContr
                                 Toast.makeText(context, "Erro na chamada à API: ${t.message}", Toast.LENGTH_LONG).show()
                             }
                         })
+
+                        //Gerar Push
+
+                        fun NotificationManager.sendNotification(title: String, message: String) {
+                            val channelId = "channel_id"
+                            val notificationBuilder = NotificationCompat.Builder(context, channelId)
+                                .setContentTitle(title)
+                                .setContentText(message)
+                                .setSmallIcon(R.drawable.jigsaw)
+                                .setAutoCancel(true)
+
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                val channel = NotificationChannel(channelId, "Channel Name", NotificationManager.IMPORTANCE_DEFAULT)
+                                createNotificationChannel(channel)
+                            }
+
+                            notify(0, notificationBuilder.build())
+                        }
+
+                        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                        notificationManager.sendNotification("Aprendiz Curtido", "Você curtiu um aprendiz!")
                     },
                     texto = "Curtir",
                     cor = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.purple_700)),
